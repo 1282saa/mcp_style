@@ -56,39 +56,93 @@ def mcp_discovery():
         "name": "서울경제신문 스타일북 MCP",
         "description": "스타일북 JSON 데이터를 조회하고 검색하는 MCP 서비스",
         "endpoint": "/mcp",
-        "schema": {
-            "properties": {
-                "action": {
-                    "type": "string",
-                    "enum": ["get_metadata", "get_categories", "get_rule", "search", "claude_search", "download_json"],
-                    "description": "실행할 도구 이름"
-                },
-                "rule_id": {
-                    "type": "string",
-                    "description": "규칙 ID (get_rule, download_json 도구용)"
-                },
-                "query": {
-                    "type": "string",
-                    "description": "검색어 (search, claude_search 도구용)"
-                },
-                "desktop_port": {
-                    "type": "number",
-                    "description": "Claude 데스크톱 앱의 통신 포트 (기본값: 5000)"
+        "tools": [  # 스키마 대신 도구 목록 직접 제공
+            {
+                "name": "get_metadata",
+                "description": "스타일북 메타데이터를 반환합니다.",
+                "parameters": {}
+            },
+            {
+                "name": "get_categories",
+                "description": "스타일북 카테고리 목록을 반환합니다.",
+                "parameters": {}
+            },
+            {
+                "name": "get_rule",
+                "description": "스타일북 규칙을 반환합니다.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "rule_id": {
+                            "type": "string",
+                            "description": "규칙 ID"
+                        }
+                    },
+                    "required": ["rule_id"]
                 }
             },
-            "required": ["action"]
-        },
+            {
+                "name": "search",
+                "description": "스타일북에서 검색합니다.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "description": "검색어"
+                        }
+                    },
+                    "required": ["query"]
+                }
+            },
+            {
+                "name": "claude_search",
+                "description": "Claude를 사용하여 스타일북에서 검색합니다.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "description": "검색어"
+                        },
+                        "desktop_port": {
+                            "type": "number",
+                            "description": "Claude 데스크톱 앱의 통신 포트 (기본값: 5000)"
+                        }
+                    },
+                    "required": ["query"]
+                }
+            },
+            {
+                "name": "download_json",
+                "description": "스타일북 JSON 파일을 다운로드합니다.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "rule_id": {
+                            "type": "string",
+                            "description": "규칙 ID (선택: 없으면 전체 데이터)"
+                        }
+                    }
+                }
+            }
+        ],
         "examples": [
             {
-                "action": "search",
-                "query": "외래어 표기법"
+                "tool": "search",  # action 대신 tool 사용
+                "parameters": {
+                    "query": "외래어 표기법"
+                }
             },
             {
-                "action": "get_metadata"
+                "tool": "get_metadata",
+                "parameters": {}
             },
             {
-                "action": "get_rule",
-                "rule_id": "ST-GUIDE-WRITING-001"
+                "tool": "get_rule",
+                "parameters": {
+                    "rule_id": "ST-GUIDE-WRITING-001"
+                }
             }
         ]
     }
