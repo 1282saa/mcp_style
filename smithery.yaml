@@ -5,7 +5,7 @@ description: 서울경제신문 스타일북을 검색하고 조회할 수 있�
 icon: 📚
 author: 서울경제신문
 startCommand:
-  type: http
+  type: stdio
   configSchema:
     type: object
     properties:
@@ -22,7 +22,7 @@ startCommand:
     ({ config }) => {
       return {
         command: "python",
-        args: ["stylebook_mcp_server.py", "--port", String(config.port || 5012), "--data_path", config.data_path || "./data"],
+        args: ["stylebook_mcp_server.py", "--stdio", "--port", String(config.port || 5012), "--data_path", config.data_path || "./data"],
         env: {}
       }
     }
