@@ -728,6 +728,7 @@ def download_json_func(params):
             }
     
     return {"success": False, "message": f"규칙을 찾을 수 없습니다: {rule_id}"}
+# Python 파일 마지막 부분을 다음과 같이 수정
 
 def main():
     """메인 함수"""
@@ -757,5 +758,6 @@ def main():
         print(f"서울경제신문 스타일북 서버 시작 중... (http://{args.host}:{args.port}/)")
         app.run(host=args.host, port=args.port, debug=args.debug)
 
+# 직접 실행될 때만 main() 호출
 if __name__ == "__main__":
-    main() 
+    main()
