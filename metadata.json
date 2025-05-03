@@ -1,0 +1,265 @@
+{
+  "metadata": {
+    "title": "서울경제신문 스타일북 데이터베이스",
+    "version": "1.0.0",
+    "created_at": "2023-06-15T09:00:00Z",
+    "last_updated": "2023-06-15T09:00:00Z",
+    "description": "서울경제신문 기사 작성 및 편집 스타일북의 JSON 데이터베이스",
+    "maintainer": "서울경제신문 디지털미디어부",
+    "contact_email": "digital@sedaily.com",
+    "license": "Copyright © 서울경제신문. All Rights Reserved."
+  },
+  "structure": {
+    "categories": [
+      {
+        "id": "writing_guide",
+        "name": "기사작성 요령",
+        "description": "기사 작성의 기본 원칙과 세부 지침",
+        "files": [
+          {
+            "id": "ST-GUIDE-WRITING-001",
+            "path": "기사작성 요령/ST-GUIDE-WRITING-001.json",
+            "title": "기사 작성 요령",
+            "description": "서울경제신문 기자들이 기사 작성 시 준수해야 할 기본 원칙과 세부 지침"
+          },
+          {
+            "id": "ST-GUIDE-WRITING-002",
+            "path": "기사작성 요령/ST-GUIDE-WRITING-002.json",
+            "title": "기사 작성 심화 지침",
+            "description": "기사 유형별 작성 요령 및 고급 기법"
+          }
+        ]
+      },
+      {
+        "id": "common_mistakes",
+        "name": "자주 틀리는 말",
+        "description": "기사 작성 시 흔히 발생하는 오류와 올바른 표현",
+        "files": [
+          {
+            "id": "ST-GUIDE-FOREIGN-WORDS-DETAILED-001",
+            "path": "자주 틀리는 말/ST-GUIDE-FOREIGN-WORDS-DETAILED-001.json",
+            "title": "외래어 표기법 상세 규칙",
+            "description": "기사 작성 시 적용해야 할 상세한 외래어 표기법에 관한 지침"
+          },
+          {
+            "id": "ST-GUIDE-GRAMMAR-RULES-002",
+            "path": "자주 틀리는 말/ST-GUIDE-GRAMMAR-RULES-002.json",
+            "title": "문법 규칙",
+            "description": "올바른 문법 사용을 위한 규칙 모음"
+          },
+          {
+            "id": "ST-GUIDE-WRITING-CORRECTION-001",
+            "path": "자주 틀리는 말/ST-GUIDE-WRITING-CORRECTION-001.json",
+            "title": "글쓰기 교정 지침",
+            "description": "글쓰기 교정 시 주의해야 할 사항"
+          },
+          {
+            "id": "ST-GUIDE-COMMON-MISTAKES-TABLE-001",
+            "path": "자주 틀리는 말/ST-GUIDE-COMMON-MISTAKES-TABLE-001.json",
+            "title": "자주 틀리는 말 - 표현 비교표",
+            "description": "기사 작성 시 혼동하기 쉬운 표현들을 표 형태로 정리해 비교한 지침"
+          },
+          {
+            "id": "ST-GUIDE-FOREIGN-COMPANIES-001",
+            "path": "자주 틀리는 말/ST-GUIDE-FOREIGN-COMPANIES-001.json",
+            "title": "외국 기업명 표기법",
+            "description": "외국 기업명 표기에 대한 지침"
+          },
+          {
+            "id": "ST-GUIDE-SPACING-RULES-001",
+            "path": "자주 틀리는 말/ST-GUIDE-SPACING-RULES-001.json",
+            "title": "띄어쓰기 규칙",
+            "description": "올바른 띄어쓰기 방법"
+          },
+          {
+            "id": "ST-GUIDE-MULTIPLE-STANDARD-WORDS-001",
+            "path": "자주 틀리는 말/ST-GUIDE-MULTIPLE-STANDARD-WORDS-001.json",
+            "title": "복수 표준어 사용 지침",
+            "description": "복수 표준어 중 선택 기준과 사용법"
+          },
+          {
+            "id": "ST-GUIDE-MULTIPLE-STANDARD-WORDS-SUMMARY-001",
+            "path": "자주 틀리는 말/ST-GUIDE-MULTIPLE-STANDARD-WORDS-SUMMARY-001.json",
+            "title": "복수 표준어 요약",
+            "description": "복수 표준어 사용 지침의 요약본"
+          },
+          {
+            "id": "ST-GUIDE-NEUTRAL-EXPRESSIONS-001",
+            "path": "자주 틀리는 말/ST-GUIDE-NEUTRAL-EXPRESSIONS-001.json",
+            "title": "중립적 표현 지침",
+            "description": "중립적이고 객관적인 표현을 위한 지침"
+          },
+          {
+            "id": "ST-GUIDE-CONFUSING-EXPRESSIONS-001",
+            "path": "자주 틀리는 말/ST-GUIDE-CONFUSING-EXPRESSIONS-001.json",
+            "title": "혼동하기 쉬운 표현",
+            "description": "의미가 유사하여 혼동하기 쉬운 표현들에 대한 지침"
+          },
+          {
+            "id": "ST-GUIDE-AMBIGUOUS-USAGES-001",
+            "path": "자주 틀리는 말/ST-GUIDE-AMBIGUOUS-USAGES-001.json",
+            "title": "모호한 용법 지침",
+            "description": "해석이 모호할 수 있는 표현에 대한 명확한 지침"
+          }
+        ],
+        "subcategories": [
+          {
+            "id": "grammar",
+            "name": "문법",
+            "description": "문법 관련 세부 규칙",
+            "files": [
+              {
+                "id": "GRAMMAR-PARTS-OF-SPEECH-001",
+                "path": "자주 틀리는 말/문법/GRAMMAR-PARTS-OF-SPEECH-001.json",
+                "title": "품사 사용법",
+                "description": "품사의 올바른 사용 및 구분에 관한 지침"
+              },
+              {
+                "id": "GRAMMAR-MONETARY-EXPRESSIONS-002",
+                "path": "자주 틀리는 말/문법/GRAMMAR-MONETARY-EXPRESSIONS-002.json",
+                "title": "금액 표현법",
+                "description": "금액 관련 표현의 올바른 사용법"
+              },
+              {
+                "id": "GRAMMAR-TERMINOLOGY-003",
+                "path": "자주 틀리는 말/문법/GRAMMAR-TERMINOLOGY-003.json",
+                "title": "전문 용어 사용법",
+                "description": "기사에서 전문 용어의 올바른 사용 지침"
+              },
+              {
+                "id": "GRAMMAR-EXPRESSIONS-004",
+                "path": "자주 틀리는 말/문법/GRAMMAR-EXPRESSIONS-004.json",
+                "title": "표현 방식 지침",
+                "description": "일반적인 표현 방식에 관한 규칙"
+              },
+              {
+                "id": "GRAMMAR-AFFIXES-005",
+                "path": "자주 틀리는 말/문법/GRAMMAR-AFFIXES-005.json",
+                "title": "접사 사용법",
+                "description": "접두사와 접미사의 올바른 사용 지침"
+              },
+              {
+                "id": "GRAMMAR-MIDDLE-DOT-006",
+                "path": "자주 틀리는 말/문법/GRAMMAR-MIDDLE-DOT-006.json",
+                "title": "가운뎃점 사용법",
+                "description": "가운뎃점(·)의 올바른 사용 방법"
+              },
+              {
+                "id": "GRAMMAR-SAISIOT-007",
+                "path": "자주 틀리는 말/문법/GRAMMAR-SAISIOT-007.json",
+                "title": "사이시옷 규칙",
+                "description": "사이시옷 표기의 올바른 사용법"
+              },
+              {
+                "id": "GRAMMAR-SUFFIXES-VERBS-008",
+                "path": "자주 틀리는 말/문법/GRAMMAR-SUFFIXES-VERBS-008.json",
+                "title": "동사 접미사 규칙",
+                "description": "동사에 붙는 접미사의 올바른 사용법"
+              },
+              {
+                "id": "GRAMMAR-PASSIVE-EXPRESSIONS-009",
+                "path": "자주 틀리는 말/문법/GRAMMAR-PASSIVE-EXPRESSIONS-009.json",
+                "title": "피동 표현 규칙",
+                "description": "피동 표현의 올바른 사용 방법"
+              },
+              {
+                "id": "GRAMMAR-VERB-CONJUGATION-010",
+                "path": "자주 틀리는 말/문법/GRAMMAR-VERB-CONJUGATION-010.json",
+                "title": "동사 활용 규칙",
+                "description": "동사의 올바른 활용 방법"
+              },
+              {
+                "id": "GRAMMAR-NOUN-PLURALS-011",
+                "path": "자주 틀리는 말/문법/GRAMMAR-NOUN-PLURALS-011.json",
+                "title": "명사 복수형 규칙",
+                "description": "명사의 복수형 표현 방법"
+              },
+              {
+                "id": "GRAMMAR-CONFUSING-EXPRESSIONS-012",
+                "path": "자주 틀리는 말/문법/GRAMMAR-CONFUSING-EXPRESSIONS-012.json",
+                "title": "혼동하기 쉬운 문법 표현",
+                "description": "문법적으로 혼동하기 쉬운 표현의 구분 지침"
+              },
+              {
+                "id": "GRAMMAR-CORRECT-WORD-USAGE-013",
+                "path": "자주 틀리는 말/문법/GRAMMAR-CORRECT-WORD-USAGE-013.json",
+                "title": "어휘 사용 규칙",
+                "description": "어휘의 정확한 의미와 용법에 관한 지침"
+              },
+              {
+                "id": "GRAMMAR-TRANSLATED-EXPRESSIONS-014",
+                "path": "자주 틀리는 말/문법/GRAMMAR-TRANSLATED-EXPRESSIONS-014.json",
+                "title": "번역 투 표현 지침",
+                "description": "번역 투 표현의 올바른 사용과 순화에 관한 지침"
+              },
+              {
+                "id": "GRAMMAR-REDUNDANCY-015",
+                "path": "자주 틀리는 말/문법/GRAMMAR-REDUNDANCY-015.json",
+                "title": "중복 표현 규칙",
+                "description": "불필요한 중복 표현을 피하는 지침"
+              },
+              {
+                "id": "GRAMMAR-INCORRECT-HADA-VERBS-016",
+                "path": "자주 틀리는 말/문법/GRAMMAR-INCORRECT-HADA-VERBS-016.json",
+                "title": "잘못된 '-하다' 동사 사용",
+                "description": "'-하다' 접미사의 올바른 사용법과 흔한 오류"
+              },
+              {
+                "id": "GRAMMAR-ENGLISH-EXPRESSIONS-017",
+                "path": "자주 틀리는 말/문법/GRAMMAR-ENGLISH-EXPRESSIONS-017.json",
+                "title": "영어식 표현 규칙",
+                "description": "영어식 표현의 올바른 한국어 표기법"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "news_value",
+        "name": "뉴스가치 판단",
+        "description": "기사의 뉴스가치 판단 기준",
+        "files": []
+      },
+      {
+        "id": "article_principles",
+        "name": "기사 작성 준칙",
+        "description": "기사 작성의 원칙과 윤리적 지침",
+        "files": []
+      },
+      {
+        "id": "headlines_layout_titles",
+        "name": "제목과 레이아웃_제목달기",
+        "description": "효과적인 기사 제목 작성법",
+        "files": []
+      },
+      {
+        "id": "headlines_layout_techniques",
+        "name": "제목과 레이아웃_레이아웃 요령",
+        "description": "기사 레이아웃 구성 방법",
+        "files": []
+      }
+    ]
+  },
+  "schema_version": {
+    "current": "1.0.0",
+    "previous_versions": [],
+    "release_notes": "최초 데이터베이스 구축"
+  },
+  "usage": {
+    "access_method": "직접 JSON 파일 접근 또는 API",
+    "search_capability": "키워드, 태그, ID 검색 가능",
+    "recommendation": "파일 수정 시 버전 관리 유지"
+  },
+  "planned_updates": [
+    {
+      "category": "뉴스가치 판단",
+      "expected_date": "2023-07-15",
+      "description": "뉴스가치 판단 기준 세부 항목 추가"
+    },
+    {
+      "category": "기사 작성 준칙",
+      "expected_date": "2023-07-30",
+      "description": "기사 작성 윤리 지침 추가"
+    }
+  ]
+}

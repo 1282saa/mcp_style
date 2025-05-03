@@ -1,0 +1,90 @@
+{
+  "rule_id": "ST-GUIDE-AMBIGUOUS-USAGES-001",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "title": "신문 작성 스타일 - 애매한 용례 정리",
+        "rule_path": ["작성원칙", "기사작성"],
+        "description": "신문 기사 작성 시 혼동되기 쉬운 표현이나 애매한 용례에 관한 지침입니다.",
+        "hint": "일관성 있는 표기는 독자가 기사를 이해하는 데 도움을 주고 신문의 전문성을 높입니다.",
+        "tags": ["용례", "표기법", "영문표기", "날짜표기", "사진설명"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["표현 규칙", "일관성"],
+        "keywords": [
+          "부총리",
+          "표기법",
+          "영문",
+          "음차",
+          "대소문자",
+          "지난",
+          "오늘",
+          "사진설명",
+          "대시",
+          "월일표기"
+        ],
+        "guidelines": [
+          {
+            "guideline_id": "AMBIGUOUS-USAGES-DEPUTY-PM-001",
+            "category": "경제부총리, 교육부총리 표기법",
+            "note": "처음 언급 시에는 전체 직함을 쓰고, 이후에는 성과 소관 분야를 붙여 약칭으로 표기합니다.",
+            "description": "최경환 부총리 겸 기획재정부 장관, 황우여 부총리 겸 교육부 장관, 이후 최 경제부총리, 황 사회부총리로 표기한다.",
+            "before": "최경환 부총리, 최 부총리",
+            "after": "최경환 부총리 겸 기획재정부 장관(첫 언급), 최 경제부총리(재언급)"
+          },
+          {
+            "guideline_id": "AMBIGUOUS-USAGES-ENGLISH-TRANSLITERATION-002",
+            "category": "영문 음차 표기",
+            "note": "외국 고유명사는 한글 발음으로 표기하되, 필요시 첫 언급에 원어를 함께 표기합니다.",
+            "description": "영문은 음차로 쓴다(예: 10일자 13면, 호주 풋볼팀 'Geelong cats', 뉴질랜드 럭비팀 'Chiefs'는 질롱캐츠, 치프스)",
+            "before": "Geelong cats, Chiefs",
+            "after": "질롱캐츠, 치프스"
+          },
+          {
+            "guideline_id": "AMBIGUOUS-USAGES-ENGLISH-CASE-003",
+            "category": "괄호 안 영문 표기",
+            "note": "영문 표기 시 대소문자 구분에 유의하고, 일반적으로 보통명사는 소문자로 표기합니다.",
+            "description": "본문 중에 나오는 괄호 안 영문 중 보통명사는 소문자로, 고유명사는 대문자 가능. 다이렉트 웨이퍼(Direct wafer)는 direct wafer로 표기. 단, 'K(Kreative)'처럼 특별한 의미가 있는 경우 대문자 유지 가능.",
+            "before": "다이렉트 웨이퍼(Direct Wafer)",
+            "after": "다이렉트 웨이퍼(direct wafer)"
+          },
+          {
+            "guideline_id": "AMBIGUOUS-USAGES-TIME-EXPRESSION-004",
+            "category": "지난/오늘 표현 제한",
+            "note": "같은 표현의 반복을 피하고 다양한 표현을 사용하는 것이 좋습니다.",
+            "description": "'지난'이나 '오늘'은 한 기사에 한번만 사용한다.",
+            "before": "지난해 결산 자료에 따르면... 지난달 발표에서는... 지난주 보고서에서는...",
+            "after": "지난해 결산 자료에 따르면... 전월 발표에서는... 최근 보고서에서는..."
+          },
+          {
+            "guideline_id": "AMBIGUOUS-USAGES-PHOTO-DESCRIPTION-005",
+            "category": "사진 설명",
+            "note": "사진 설명은 간결하고 직접적으로 내용을 전달하는 것이 좋습니다.",
+            "description": "사진기사에서 '사진은'이라는 설명은 부득이할 경우를 제외하고는 사용하지 않음.",
+            "before": "사진은 박 대통령이 연설하는 모습이다.",
+            "after": "박 대통령이 연설하고 있다."
+          },
+          {
+            "guideline_id": "AMBIGUOUS-USAGES-DASH-006",
+            "category": "대시 사용",
+            "note": "한글과 영문이 결합된 단어에서는 일반적으로 대시 없이 붙여 씁니다.",
+            "description": "k-팝이나 K-뷰티 등은 대시를 쓰지 않는다. K팝, K뷰티로 표기.",
+            "before": "K-팝, K-뷰티",
+            "after": "K팝, K뷰티"
+          },
+          {
+            "guideline_id": "AMBIGUOUS-USAGES-DATE-FORMAT-007",
+            "category": "월일 표기법",
+            "note": "날짜 표기는 독자의 이해를 돕기 위해 명확하게 해야 합니다.",
+            "description": "기사는 작성시점을 기준으로 기술되므로 월말에는 그날을 기준으로, 다음달은 몇 월 며칠로 표기한다. 그 다음부터는 월을 생략할 수 있다.",
+            "before": "내달 3일",
+            "after": "6월 3일(5월 말 기사 기준)"
+          }
+        ]
+      }
+    }
+  ]
+}

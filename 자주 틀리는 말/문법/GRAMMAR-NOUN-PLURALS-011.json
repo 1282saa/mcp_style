@@ -1,0 +1,35 @@
+{
+  "rule_id": "ST-GUIDE-GRAMMAR-NOUN-PLURALS-011",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "rule_path": ["작성원칙", "문법규칙", "명사복수"],
+        "hint": "일부 집합 명사는 이미 복수의 의미를 내포하고 있습니다.",
+        "tags": ["문법", "명사", "단수", "복수"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["문법 규칙", "명사 표현"],
+        "keywords": [
+          "명사",
+          "복수",
+          "집합명사",
+          "군중",
+          "대중",
+          "경영진",
+          "취재진"
+        ],
+        "guideline": {
+          "guideline_id": "GRAMMAR-NOUN-PLURALS-011",
+          "category": "명사 단수/복수 사용",
+          "note": "군중, 대중, 경영진, 취재진은 이미 모인 상태를 나타내므로 복수로 쓰지 않는다",
+          "explanation": "일부 집합 명사는 그 자체로 모인 상태를 나타내므로 복수형으로 사용하지 않습니다.",
+          "before": "경영진들이 모여 회의를 갖고",
+          "after": "경영진이 회의를 갖고"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "rule_id": "ST-GUIDE-CONFUSING-EXPRESSIONS-001",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "title": "자주 틀리는 말 - 혼동하기 쉬운 표현",
+        "rule_path": ["작성원칙", "올바른표현"],
+        "description": "기사 작성 시 혼동하기 쉬운 표현들에 관한 지침으로, 유사하지만 의미가 다른 단어들의 구분법과 자주 틀리는 맞춤법 및 표현을 정리합니다.",
+        "hint": "비슷한 단어나 표현이라도 의미 차이를 정확히 파악하여 적절하게 사용해야 합니다.",
+        "tags": ["혼동표현", "유사단어", "맞춤법", "의미구분"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["어휘 선택", "표현 정확성"],
+        "keywords": [
+          "혼동",
+          "유사어",
+          "맞춤법",
+          "표현",
+          "의미구분",
+          "의미차이"
+        ],
+        "guidelines": [
+          {
+            "guideline_id": "CONFUSING-EXPRESSIONS-COMMON-MISTAKES-001",
+            "category": "자주 틀리는 표현들",
+            "note": "방증은 주변상황을 밝힘으로써 간접적 증명에 도움을 줌 또는 증거를 의미하며, 과반수는 반을 넘은 수이므로 '과반수 이상'은 틀린 표현입니다.",
+            "description": "방증, 과반수, 기지개를 켜다, 소와 속, 담근다와 담는다, 까무러치다와 까무라치다, 까탈스럽다, 꺼리다와 꺼려하다, 한나절과 반나절, 난들과 낸들 등 자주 틀리는 표현들의 올바른 사용법을 설명합니다.",
+            "before": "과반수 이상의 찬성을 얻었다",
+            "after": "과반수의 찬성을 얻었다"
+          },
+          {
+            "guideline_id": "CONFUSING-EXPRESSIONS-STRETCHED-BODY-002",
+            "category": "기지개 표현",
+            "note": "'기지개를 켜다'가 올바른 표현입니다.",
+            "before": "기지개를 펴다",
+            "after": "기지개를 켜다"
+          },
+          {
+            "guideline_id": "CONFUSING-EXPRESSIONS-FOOD-INGREDIENTS-003",
+            "category": "소와 속 구분",
+            "note": "'소'는 음식 재료로 넣는 것, '속'은 안쪽 부분을 의미합니다.",
+            "before": "김치 속을 만들다",
+            "after": "김치 소를 만들다"
+          },
+          {
+            "guideline_id": "CONFUSING-EXPRESSIONS-FAINT-004",
+            "category": "까무러치다 표현",
+            "note": "'까무러치다'가 표준어입니다.",
+            "before": "까무라치다",
+            "after": "까무러치다"
+          },
+          {
+            "guideline_id": "CONFUSING-EXPRESSIONS-PICKY-005",
+            "category": "까탈스럽다 표현",
+            "note": "'까탈스럽다'는 비표준어, '까다롭다'가 표준어입니다.",
+            "before": "까탈스럽다",
+            "after": "까다롭다"
+          },
+          {
+            "guideline_id": "CONFUSING-EXPRESSIONS-AVOID-006",
+            "category": "꺼리다와 꺼려하다",
+            "note": "'꺼리다'가 동사이므로 '하다'를 붙일 필요 없습니다.",
+            "before": "꺼려하다",
+            "after": "꺼리다"
+          },
+          {
+            "guideline_id": "CONFUSING-EXPRESSIONS-SIMILAR-WORDS-007",
+            "category": "혼동하기 쉬운 표현들",
+            "note": "'날염'이 표준어이고, '내로라'가 맞는 표현이며, '뒤처지다'가 표준어입니다. 바탕하다, 기반하다, 염두하다 등은 부자연스러운 표현으로 피해야 합니다.",
+            "description": "날염과 나염, 내로라, 뒤처지다와 뒤쳐지다, 되레, 바람과 바램, 바탕하다와 기반하다, 붓두껍과 붓뚜껑, 쌓이다와 싸이다, 야멸차다, 양동작전과 양면작전 등 혼동하기 쉬운 표현들의 올바른 사용법을 설명합니다.",
+            "examples": [
+              {
+                "before": "나염",
+                "after": "날염"
+              },
+              {
+                "before": "내노라 하는 인물",
+                "after": "내로라하는 인물"
+              },
+              {
+                "before": "뒤쳐지다",
+                "after": "뒤처지다"
+              },
+              {
+                "before": "상원 인준절차를 염두하다",
+                "after": "상원 인준절차를 염두에 두다"
+              }
+            ]
+          },
+          {
+            "guideline_id": "CONFUSING-EXPRESSIONS-DIFFERENT-MEANINGS-008",
+            "category": "의미 차이가 있는 표현들",
+            "note": "애먼은 일의 결과가 달라 억울한 면이 있다는 뜻이고, 역임은 옛날부터 지금까지 두루 직책을 거쳐옴을 의미하므로 현재 직책에는 사용할 수 없습니다.",
+            "description": "엄한과 애먼, ~여부, 역임, 연임과 중임, 임산부와 임신부, 접수, 장본인과 주인공 등 의미 차이가 있는 표현들의 올바른 사용법을 설명합니다.",
+            "before": "교수가 현재 협회장을 역임하고 있다",
+            "after": "교수가 현재 협회장을 맡고 있다"
+          },
+          {
+            "guideline_id": "CONFUSING-EXPRESSIONS-SPELLING-009",
+            "category": "자주 틀리는 맞춤법과 표현",
+            "note": "짜깁기가 표준어이고, 초토화는 불에 탄 것처럼 황폐해진 상태를 의미하므로 비나 홍수로 인한 피해에는 사용할 수 없습니다.",
+            "description": "짜깁기와 짜집기, 초토화, 추스르다, 주꾸미와 먹장어, 풍비박산, 사자성어 틀린 용례, 추켜세우다와 치켜세우다, 콧망울과 콧방울, 타산지석 등 자주 틀리는 맞춤법과 표현들의 올바른 사용법을 설명합니다.",
+            "examples": [
+              {
+                "before": "짜집기",
+                "after": "짜깁기"
+              },
+              {
+                "before": "홍수로 인한 초토화",
+                "after": "홍수로 인한 황폐화"
+              },
+              {
+                "before": "쭈꾸미",
+                "after": "주꾸미"
+              }
+            ]
+          },
+          {
+            "guideline_id": "CONFUSING-EXPRESSIONS-SIMILAR-MEANINGS-010",
+            "category": "의미 혼동하기 쉬운 표현들",
+            "note": "일체는 '전부' 또는 '완전히'의 뜻이고, 일절은 '아주', '전혀', '절대로'의 뜻으로 주로 행위를 그치게 하거나 어떤 일을 하지 않을 때 사용합니다.",
+            "description": "일체와 일절, 해후, 보전과 보존, 부문과 부분, 운용과 운영, 재연과 재현, 난도와 난이도, 회동, 탓 등 의미 혼동하기 쉬운 표현들의 올바른 사용법을 설명합니다.",
+            "examples": [
+              {
+                "before": "아파트 분양권 보전",
+                "after": "아파트 분양권 보존"
+              },
+              {
+                "before": "음악 부분 대상 수상",
+                "after": "음악 부문 대상 수상"
+              },
+              {
+                "before": "역사적 사건 재현",
+                "after": "역사적 사건 재연"
+              },
+              {
+                "before": "시험 난도가 쉬웠다",
+                "after": "시험 난이도가 낮았다"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

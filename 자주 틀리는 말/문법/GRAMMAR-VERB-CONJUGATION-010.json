@@ -1,0 +1,32 @@
+{
+  "rule_id": "ST-GUIDE-GRAMMAR-VERB-CONJUGATION-010",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "rule_path": ["작성원칙", "문법규칙", "활용형태"],
+        "hint": "준말이 있는 단어도 올바른 활용 형태를 사용해야 합니다.",
+        "tags": ["문법", "활용", "준말"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["문법 규칙", "활용"],
+        "keywords": ["활용", "준말", "내딛다", "내디디다"],
+        "guideline": {
+          "guideline_id": "GRAMMAR-VERB-CONJUGATION-010",
+          "category": "활용 형태",
+          "note": "일부 준말은 활용 시 원형으로 되돌아갑니다.",
+          "examples": [
+            {
+              "pair": ["내딛다", "내디디다"],
+              "note": "'내딛다'는 '내디디다'의 준말이지만 준말로 활용되지 않음",
+              "wrong": "내딛어, 내딛었다",
+              "correct": "내디더, 내디덨다"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

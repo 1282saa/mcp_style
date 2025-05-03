@@ -1,0 +1,42 @@
+{
+  "rule_id": "ST-GUIDE-GRAMMAR-TERMINOLOGY-003",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "rule_path": ["작성원칙", "문법규칙", "용어바꿔쓰기"],
+        "hint": "적절한 용어 선택으로 문장의 현대성과 가독성을 높입니다.",
+        "tags": ["문법", "용어", "표현", "시간표현"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["문법 규칙", "어휘 선택"],
+        "keywords": ["용어", "시간표현", "바꿔쓰기", "순화"],
+        "guideline": {
+          "guideline_id": "GRAMMAR-TERMINOLOGY-003",
+          "category": "용어 바꿔쓰기",
+          "note": "문어체나 구식 표현은 현대적 표현으로 바꿔 씁니다.",
+          "examples": [
+            {
+              "before": "작년",
+              "after": "지난해"
+            },
+            {
+              "before": "금년",
+              "after": "올해"
+            },
+            {
+              "before": "내달",
+              "after": "다음달"
+            },
+            {
+              "before": "내주",
+              "after": "다음주"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

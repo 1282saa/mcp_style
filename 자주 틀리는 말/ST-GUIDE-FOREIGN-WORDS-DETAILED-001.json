@@ -1,0 +1,163 @@
+{
+  "rule_id": "ST-GUIDE-FOREIGN-WORDS-DETAILED-001",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "title": "외래어 표기법 상세 규칙",
+        "rule_path": ["작성원칙", "올바른표현"],
+        "description": "기사 작성 시 적용해야 할 상세한 외래어 표기법에 관한 지침입니다.",
+        "hint": "외래어 표기는 국립국어원의 외래어 표기법을 따르되, 언어별 특수성을 고려해야 합니다.",
+        "tags": ["외래어", "외국어", "표기법", "한글화", "언어별표기법"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["문법 규칙", "표현 정확성"],
+        "keywords": ["외래어", "표기법", "음성기호", "중국어", "북한말", "일본어", "동남아어", "타이어", "베트남어", "말레이인도네시아어"],
+        "guidelines": [
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-BASIC-001",
+            "category": "기본 원칙",
+            "note": "외래어는 해당 언어의 발음에 따라 표기합니다.",
+            "description": "외래어는 외래어표기법에 맞게 쓰되 대부분 그 나라의 음성기호에 맞게 쓴다.",
+            "examples": [
+              {
+                "description": "유럽어 표기",
+                "example": "도이체방크(독일), 소시에테제네랄(프랑스)"
+              },
+              {
+                "description": "중국어 표기",
+                "example": "상해(上海)→상하이, 등소평(鄧小平)→덩샤오핑(중국)"
+              }
+            ]
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-PHONETIC-002",
+            "category": "음성학적 기준",
+            "note": "외래어표기법은 현지 발음보다 음성학적 기준을 우선합니다.",
+            "description": "외래어표기법은 현지 발음이 아닌 음성학적 기호로 간주한다.",
+            "examples": [
+              {
+                "description": "s/c 표기",
+                "example": "사이버(cyber), 시스템(system) 등"
+              },
+              {
+                "description": "th 표기",
+                "example": "먼스(month), 스리(three), 생큐(thank) 등"
+              }
+            ]
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-ORIGIN-003",
+            "category": "원어 발음 기준",
+            "note": "외래어는 발생한 나라의 발음 기준을 따릅니다.",
+            "description": "외래어는 발생한 나라의 발음기호로 읽는 것을 원칙으로 한다.",
+            "example": "비타민, 게놈, 알레르기 등"
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-CHINESE-004",
+            "category": "중국 지명 표기",
+            "note": "중국 지명 중 관용화된 한자음은 그대로 사용합니다.",
+            "description": "중국 지형 중 우리 한자음대로 발음하는 게 관용화된 것은 이에 따른다.",
+            "example": "만리장성(萬里長城)→완리장성(x)"
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-NORTH-KOREAN-005",
+            "category": "북한말 표기",
+            "note": "북한말에는 두음법칙을 적용합니다.",
+            "description": "북한말은 한글 맞춤법에 따라 두음법칙을 적용한다.",
+            "example": "룡천(龍川)→용천"
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-JAPANESE-006",
+            "category": "일본어 표기",
+            "note": "일본어의 두음은 격음을 쓰지 않습니다.",
+            "description": "일본어에서 두음은 격음을 쓰지 않는다.",
+            "example": "치바→지바, 토쿄→도쿄 등"
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-JAPANESE-AVOID-007",
+            "category": "일본어 지양",
+            "note": "일본어 표현은 지양하고 우리말로 바꿔 씁니다.",
+            "description": "만연돼 있는 일본어 표기는 지양한다.",
+            "examples": [
+              {
+                "before": "한 매",
+                "after": "한 장"
+              },
+              {
+                "before": "본보",
+                "after": "본지"
+              },
+              {
+                "before": "매",
+                "after": "마다"
+              },
+              {
+                "before": "보유고(保有高)",
+                "after": "보유액"
+              }
+            ]
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-SOUTHEAST-ASIAN-008",
+            "category": "동남아 언어 파열음",
+            "note": "동남아 3개 언어의 음절말 파열음은 앞 음절의 받침으로 적습니다.",
+            "description": "동남아 3개 언어(말레이인도네시아어, 타이어, 베트남어)에서 음절말 파열음은 유무성을 구분하지 않고 모두 앞 음절의 받침으로 적는다.",
+            "example": "롬복(Lombok), 밧(baht), 링깃(ringgit)"
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-NG-SOUND-009",
+            "category": "ng 발음 표기",
+            "note": "모음 앞의 'ng'는 'ㅇ'으로 표기합니다.",
+            "description": "모음 앞의 'ng'를 'ㅇ'으로 표기한다.",
+            "example": "응아라이(Ngarai), 꽝응아이(Quang Ngai)"
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-THAI-VIETNAMESE-010",
+            "category": "타이어와 베트남어 된소리",
+            "note": "타이어와 베트남어에는 된소리를 사용합니다.",
+            "description": "타이어와 베트남어에는 된소리 표기를 사용한다.",
+            "example": "푸껫(Phuket), 호찌민(Ho Chi Minh)"
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-THAI-CH-011",
+            "category": "타이어 ch와 c 표기",
+            "note": "타이어에서 'ch'는 'ㅊ', 'c'는 'ㅉ'으로 표기합니다.",
+            "description": "타이어에서는 'ch'는 'ㅊ'으로, 'c'는 'ㅉ'으로 표기한다.",
+            "example": "치앙마이(Chiang Mai), 깽쯧(kseng cued)"
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-MALAY-INDONESIAN-012",
+            "category": "말레이인도네시아어 e 표기",
+            "note": "말레이인도네시아어의 'e'는 발음에 따라 '에'와 '으'로 구분해 표기합니다.",
+            "description": "말레이인도네시아어에서 'e'는 발음을 확인하여 '에'와 '으' 두 가지로 나누어 적는다.",
+            "example": "메단(Medan), 스마랑(Semarang)"
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-VIETNAMESE-TR-NH-013",
+            "category": "베트남어 tr과 nh 표기",
+            "note": "베트남어의 'tr'은 'ㅉ'으로, 'nh'는 '니'로 표기합니다.",
+            "description": "베트남어에서는 'tr'를 'ㅉ'으로, 'nh'를 '니'로 적는다.",
+            "example": "냐짱(Nha Trang)"
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-VIETNAMESE-S-X-014",
+            "category": "베트남어 s와 x 구분",
+            "note": "베트남어의 's'와 'x'는 각각 'ㅅ'과 'ㅆ'으로 구분해 표기합니다.",
+            "description": "베트남어에서 's'와 'x'는 각각 'ㅅ'과 'ㅆ'으로 구분한다.",
+            "example": "송꼬이(Songcoi)"
+          },
+          {
+            "guideline_id": "FOREIGN-WORDS-DETAILED-REALITY-GAP-015",
+            "category": "표기법과 현실의 괴리",
+            "note": "이미 고유명사화된 외래어 표기는 현실적인 제약에 따라 허용합니다.",
+            "description": "외래어표기법과 현실음과의 괴리가 있는 경우에도 법인 형태의 표기로 고유명사화된 것은 현실적인 제약으로 인해 허용한다.",
+            "example": "휴렛패커드(hewlett-packard), 화이자(pfizer), 씨티은행(city bank), 보쉬(Bosche) 등"
+          }
+        ]
+      }
+    }
+  ]
+}

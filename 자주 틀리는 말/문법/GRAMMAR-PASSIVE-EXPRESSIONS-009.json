@@ -1,0 +1,53 @@
+{
+  "rule_id": "ST-GUIDE-GRAMMAR-PASSIVE-EXPRESSIONS-009",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "rule_path": ["작성원칙", "문법규칙", "피동표현"],
+        "hint": "정확한 피동 표현은 문장의 자연스러움을 높입니다.",
+        "tags": ["문법", "피동", "표현"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["문법 규칙", "피동표현"],
+        "keywords": [
+          "피동",
+          "접미사",
+          "이",
+          "히",
+          "리",
+          "기",
+          "어지다",
+          "중복피동"
+        ],
+        "guideline": {
+          "guideline_id": "GRAMMAR-PASSIVE-EXPRESSIONS-009",
+          "category": "피동 표현",
+          "note": "피동 표현의 올바른 사용법",
+          "explanation": "한국어의 피동 표현은 일정한 규칙이 있으며, 중복 피동은 피해야 합니다.",
+          "examples": [
+            {
+              "description": "동사 어간에 '이, 히, 리, 기' 접미사 붙이기",
+              "example": "먹이다, 잡히다, 불리다"
+            },
+            {
+              "description": "'~어(아) 지다' 붙이기",
+              "example": "만들어지다, 주어지다, 믿어지다"
+            },
+            {
+              "description": "중복 피동 표현 금지",
+              "wrong": "나뉘어지다, 보여집니다, 쓰여집니다",
+              "correct": "나뉘다, 보입니다, 쓰입니다"
+            },
+            {
+              "description": "'비치다'는 이미 피동 의미를 내포",
+              "note": "'무엇으로 보이거나 인식되다'는 뜻으로 그 자체로 피동 표현"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

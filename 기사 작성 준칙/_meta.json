@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "title": "서울경제신문 스타일북",
+    "version": "1.0",
+    "created_at": "2025-05-03T00:00:00Z",
+    "last_updated": "2025-05-03T00:00:00Z",
+    "description": "서울경제신문의 기사 작성 및 편집을 위한 스타일 가이드"
+  },
+  "structure": {
+    "categories": [
+      {
+        "id": "WRITINGPRINCIPLE",
+        "name": "표기원칙",
+        "description": "기사 작성 시 따라야 할 표기 원칙들"
+      }
+    ],
+    "rules": [
+      {
+        "rule_id": "ST-JUDGE-WRITINGPRINCIPLE-PLACE-001",
+        "title": "지명 표기법",
+        "file_name": "ST-JUDGE-WRITINGPRINCIPLE-PLACE-001.json",
+        "source_file": "(2) 지명.txt",
+        "description": "국내외 지명 표기에 관한 규칙"
+      },
+      {
+        "rule_id": "ST-JUDGE-WRITINGPRINCIPLE-ORGANIZATION-001",
+        "title": "기관·정당·단체·관직명 표기법",
+        "file_name": "ST-JUDGE-WRITINGPRINCIPLE-ORGANIZATION-001.json",
+        "source_file": "(3) 관청기관·정당·관직명.txt",
+        "description": "기관, 정당, 단체, 관직명 등의 표기에 관한 규칙"
+      },
+      {
+        "rule_id": "ST-JUDGE-WRITINGPRINCIPLE-TIMEDATE-001",
+        "title": "시간 및 날짜 표기법",
+        "file_name": "ST-JUDGE-WRITINGPRINCIPLE-TIMEDATE-001.json",
+        "source_file": "(4) 시간과 날짜의 표기.txt",
+        "description": "시간과 날짜를 표기하는 방법에 관한 규칙"
+      },
+      {
+        "rule_id": "ST-JUDGE-WRITINGPRINCIPLE-NUMBER-001",
+        "title": "숫자 및 단위 표기법",
+        "file_name": "ST-JUDGE-WRITINGPRINCIPLE-NUMBER-001.json",
+        "source_file": "(5) 숫자 및 단위.txt",
+        "description": "숫자와 단위를 표기하는 방법에 관한 규칙"
+      },
+      {
+        "rule_id": "ST-JUDGE-WRITINGPRINCIPLE-PUNCTUATION-001",
+        "title": "문장부호 및 약물 표기법",
+        "file_name": "ST-JUDGE-WRITINGPRINCIPLE-PUNCTUATION-001.json",
+        "source_file": "(6) 문장부호 및 약물.txt",
+        "description": "문장부호 및 약물(특수문자)의 사용 방법에 관한 규칙"
+      },
+      {
+        "rule_id": "ST-JUDGE-WRITINGPRINCIPLE-MISCELLANEOUS-001",
+        "title": "기타 표기법",
+        "file_name": "ST-JUDGE-WRITINGPRINCIPLE-MISCELLANEOUS-001.json",
+        "source_file": "(7) 기타.txt",
+        "description": "신문 표기, 용어 사용, 시간 표현, 크레디트 표기 등 기타 표기에 관한 규칙"
+      },
+      {
+        "rule_id": "ST-JUDGE-WRITINGPRINCIPLE-NAME-001",
+        "title": "인명 표기법",
+        "file_name": "ST-JUDGE-WRITINGPRINCIPLE-NAME-001.json",
+        "source_file": "(1) 외국인 이름.txt",
+        "description": "국내외 인명 표기에 관한 규칙"
+      }
+    ]
+  },
+  "implementation": {
+    "database_schema": "규칙 DB와 오류(로그) DB로 구성",
+    "rule_structure": "JSON 형식으로 구조화된 규칙 데이터",
+    "engine_components": [
+      "규칙 기반 검사기",
+      "컨텍스트 인식 검사기",
+      "통계 기반 검사기",
+      "LLM 통합 고급 검사기"
+    ],
+    "interface": "웹 기반 교열 인터페이스"
+  },
+  "version_control": {
+    "versioning_scheme": "메이저.마이너 (예: v1.0)",
+    "update_process": "규칙 피드백 수집 → 검토 → 승인 → 버전 업데이트",
+    "changelog_format": "변경 내용, 변경 이유, 영향받는 규칙 등 포함"
+  }
+}

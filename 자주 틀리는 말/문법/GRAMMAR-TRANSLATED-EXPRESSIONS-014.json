@@ -1,0 +1,35 @@
+{
+  "rule_id": "ST-GUIDE-GRAMMAR-TRANSLATED-EXPRESSIONS-014",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "rule_path": ["작성원칙", "문법규칙", "번역투지양"],
+        "hint": "자연스러운 한국어 표현을 위해 번역투를 지양해야 합니다.",
+        "tags": ["문법", "번역투", "표현"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["문법 규칙", "표현"],
+        "keywords": ["번역투", "직역", "자연스러운표현", "만들다", "하여금"],
+        "guideline": {
+          "guideline_id": "GRAMMAR-TRANSLATED-EXPRESSIONS-014",
+          "category": "번역투 표현 지양",
+          "note": "만들다, ~하여금, ~에 의해 등 번역투의 문장은 가급적 쓰지 않는다",
+          "explanation": "외국어를 직역한 표현보다 자연스러운 한국어 표현을 사용해야 합니다.",
+          "examples": [
+            {
+              "before": "그는 법안이 통과되도록 만들었다.",
+              "after": "그는 법안이 통과되도록 했다."
+            },
+            {
+              "before": "회사로 하여금 직원 복지에 관심을 갖게 하도록",
+              "after": "회사가 직원 복지에 관심을 갖도록"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

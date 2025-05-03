@@ -1,0 +1,27 @@
+{
+  "rule_id": "ST-GUIDE-GRAMMAR-EXPRESSIONS-004",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "rule_path": ["작성원칙", "문법규칙", "표현풀어쓰기"],
+        "hint": "축약된 표현보다 풀어쓴 표현이 더 자연스럽고 이해하기 쉽습니다.",
+        "tags": ["문법", "표현", "어미"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["문법 규칙", "어휘 선택"],
+        "keywords": ["표현", "풀어쓰기", "키로", "토록", "지"],
+        "guideline": {
+          "guideline_id": "GRAMMAR-EXPRESSIONS-004",
+          "category": "표현 풀어쓰기",
+          "note": "'~키로'나 '토록'은 풀어 쓴다",
+          "before": "정부는 신용회복지원 세부지침을 수립, 이를 시행토록 했다.",
+          "after": "정부는 신용회복지원 세부지점을 수립, 시행하도록 했다.",
+          "additional_note": "'하+지'임에도 '치'가 아닌 '지'로 적는 경우: 생각지도 않다, 넉넉지 않다, 익숙지 않다, 섭섭지 않다 등"
+        }
+      }
+    }
+  ]
+}

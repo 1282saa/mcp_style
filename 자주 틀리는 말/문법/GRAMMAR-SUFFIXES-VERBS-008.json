@@ -1,0 +1,73 @@
+{
+  "rule_id": "ST-GUIDE-GRAMMAR-SUFFIXES-VERBS-008",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "rule_path": ["작성원칙", "문법규칙", "접미사와동사"],
+        "hint": "'받다'와 '되다'는 다양한 품사 기능을 가진 중요한 단어입니다.",
+        "tags": ["문법", "접미사", "동사", "자동사", "타동사"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["문법 규칙", "품사 활용"],
+        "keywords": [
+          "접미사",
+          "동사",
+          "받다",
+          "되다",
+          "자동사",
+          "타동사",
+          "품사변환"
+        ],
+        "guideline": {
+          "guideline_id": "GRAMMAR-SUFFIXES-VERBS-008",
+          "category": "접미사와 동사 용법",
+          "note": "'받다'와 '되다'는 독립 동사로 쓰이기도 하고 접미사로 쓰이기도 합니다.",
+          "examples": [
+            {
+              "word": "받다",
+              "usages": [
+                {
+                  "type": "타동사",
+                  "example": "원서를 받다."
+                },
+                {
+                  "type": "접미사",
+                  "meaning": "일부 명사 밑에 붙어 '입다', '당하다'의 뜻을 나타냄. 능동에 해당하는 말이 있다면 피동으로 쓰임",
+                  "example": "사랑받다, 요구받다, 의심받다"
+                }
+              ]
+            },
+            {
+              "word": "되다",
+              "usages": [
+                {
+                  "type": "자동사",
+                  "meaning": "'이루어지다'라는 뜻",
+                  "example": "일이 제대로 되다."
+                },
+                {
+                  "type": "조동사",
+                  "meaning": "'-게' 활용형 앞에 붙어 사용",
+                  "example": "책을 읽게 되다."
+                },
+                {
+                  "type": "접미사(자동사)",
+                  "meaning": "'하다'가 붙을 수 있는 명사에 붙어 자동사로 만듦",
+                  "example": "걱정되다, 묵살되다"
+                },
+                {
+                  "type": "접미사(형용사)",
+                  "meaning": "일부 명사나 부사에 붙어 형용사로 만듦",
+                  "example": "참되다, 덜되다"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

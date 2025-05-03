@@ -1,0 +1,220 @@
+{
+  "rule_id": "ST-GUIDE-SPACING-RULES-001",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "title": "띄어쓰기 상세 규칙",
+        "rule_path": ["작성원칙", "올바른표현"],
+        "description": "기사 작성 시 적용해야 할 상세한 띄어쓰기 규칙에 관한 지침입니다.",
+        "hint": "정확한 띄어쓰기는 기사의 가독성을 높이고 독자의 이해를 돕는 중요한 요소입니다.",
+        "tags": [
+          "띄어쓰기",
+          "날짜",
+          "단위",
+          "명칭",
+          "고유명사",
+          "접두사",
+          "접미사",
+          "복합어",
+          "의존명사"
+        ],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["문법 규칙", "표현 정확성"],
+        "keywords": [
+          "띄어쓰기",
+          "연도",
+          "날짜",
+          "단위",
+          "이어주는말",
+          "성명",
+          "고유명사",
+          "접두사",
+          "보조용언",
+          "의존명사"
+        ],
+        "guidelines": [
+          {
+            "guideline_id": "SPACING-DETAILED-YEAR-DATE-001",
+            "category": "연도와 날짜",
+            "note": "연도와 달은 띄어 쓰고 달과 날은 붙여 씁니다.",
+            "description": "특수한 상황을 제외하고 연도와 달은 띄어 쓰고 달과 날은 붙여 쓴다.",
+            "example": "99년 5월14일"
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-UNITS-002",
+            "category": "단위 띄어쓰기",
+            "note": "단위는 기본적으로 띄어 쓰되, 순서나 아라비아 숫자와 함께 쓰일 때는 붙여 쓸 수 있습니다.",
+            "description": "단위는 띄어쓰기를 원칙으로 한다. 다만 순서를 나타내는 경우나 아라비아숫자와 어울릴 때는 붙여 쓸 수 있다.",
+            "examples": [
+              {
+                "description": "단위 기본 띄어쓰기",
+                "example": "나무 한 그루, 소 두 마리, 자동차 한 대, 옷 한 벌"
+              },
+              {
+                "description": "순서 표현 붙여쓰기",
+                "example": "제1장, 제2회, 제3항"
+              },
+              {
+                "description": "아라비아 숫자와 단위 붙여쓰기",
+                "example": "1,000만원, 1만7,000가구, 5만명"
+              }
+            ]
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-CONNECTING-WORDS-003",
+            "category": "이어주는 말",
+            "note": "이어주는 말은 앞뒤로 띄어 씁니다.",
+            "description": "두 말을 이어주거나 열거할 때 쓰이는 말은 띄어 쓴다.",
+            "example": "부국장 겸 부장, 한국 대 일본, 열흘 내지 보름, 사과 및 배"
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-NAMES-TITLES-004",
+            "category": "성과 이름, 호칭",
+            "note": "성과 이름은 붙여 쓰고, 호칭이나 관직명은 띄어 씁니다.",
+            "description": "성과 이름, 성과 호 등은 붙여 쓰고 이에 덧붙는 호칭어 · 관직명은 띄어 쓴다.",
+            "example": "서화담, 최치원 선생, 박 여사, 총장 정운찬 박사"
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-PROPER-NOUNS-005",
+            "category": "고유명사 띄어쓰기",
+            "note": "성명 외의 고유명사는 단어별로 띄어 쓰는 것이 원칙이지만, 단위별로 띄어 쓸 수도 있습니다.",
+            "description": "성명 이외의 고유명사는 단어별로 띄어 씀을 원칙으로 하되 단위별로 띄어 쓸 수 있다.",
+            "example": "서울대학교 인문대학 국어국문학과"
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-ADJECTIVE-FIRST-006",
+            "category": "'첫'의 띄어쓰기",
+            "note": "'첫'은 접두사가 아닌 관형사이므로 띄어 쓰되, 사전에 등재된 단어는 붙여 씁니다.",
+            "description": "'첫'은 접두사가 아닌 관형사로 띄어 쓰다. 첫해 · 첫날 등 사전에서 인정하는 단어는 붙여 쓴다.",
+            "examples": [
+              {
+                "description": "관형사 '첫'",
+                "example": "첫 시험, 첫 월급"
+              },
+              {
+                "description": "사전 등재 복합어",
+                "example": "첫해, 첫날"
+              }
+            ]
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-SUFFIX-VALUE-007",
+            "category": "값 표시 접미사",
+            "note": "값을 나타내는 '대'와 '당'은 접미사이므로 붙여 씁니다.",
+            "description": "값을 나타내는 '대', 마다를 나타내는 '당'은 접미사로 붙여 쓴다.",
+            "examples": [
+              {
+                "description": "값 표시 '대'",
+                "example": "회사가치는 10억원대에 이른다."
+              },
+              {
+                "description": "마다 표시 '당'",
+                "example": "1인당 국민소득은"
+              }
+            ]
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-COMPOUND-WORDS-008",
+            "category": "복합어와 동사 결합",
+            "note": "사전에 등재된 복합어는 붙여 쓰고, 그 외 동사 결합은 띄어 씁니다.",
+            "description": "사전에서 인정한 복합어는 붙여 쓰고 그 외에 두 동사가 합쳐진 형태는 띄어 쓴다.",
+            "example": "먹고살다, 못지않다, 끊임없다 등 (복합어)"
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-ORGANIZATION-NAMES-009",
+            "category": "학명과 단체명",
+            "note": "학명이나 단체명은 붙여 쓰고, 전문용어는 단어별로 띄어 쓰는 것이 원칙이나 붙여 쓰는 것도 허용됩니다.",
+            "description": "학명이나 단체명은 붙여 쓴다. 전문용어는 단어별로 띄어 쓰는 것을 원칙으로 하지만 붙여 쓰는 것도 허용한다.",
+            "example": "서울경제신문, 교원단체연합회, 전국경제인연합회"
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-ENGLISH-KOREAN-010",
+            "category": "영문과 한글 표기",
+            "note": "영문 한글 표기와 한자어/한글이 결합할 때는 띄어 쓰되, 영문+영문 한글 표기는 붙여 쓸 수도 있습니다.",
+            "description": "영문 한글 표기+한자어, 영문 한글 표기+ 한글일 때 상품명이 아닌 보통명사의 경우 띄어 쓴다. 단 영문+영문 한글 표기의 경우 띄어 쓰는 것이 원칙이나 붙여 써도 무방하다.",
+            "examples": [
+              {
+                "description": "영문 한글 표기와 한자어/한글",
+                "example": "한글지원 시스템, 드링크 제품, 패키지 요금 등"
+              },
+              {
+                "description": "영문+영문 한글 표기",
+                "example": "뉴욕(New York), 로스앤젤레스(Los Angeles) 등"
+              }
+            ]
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-AUXILIARY-VERBS-011",
+            "category": "보조용언 띄어쓰기",
+            "note": "보조용언은 원칙적으로 띄어 쓰되, 일부 경우 붙여 쓸 수 있습니다.",
+            "description": "보조용언은 띄어쓰기를 원칙으로 하되 붙여 쓰는 것도 허용한다. 우리는 공간상의 문제로 붙여 쓴다. 앞말에 조사가 붙거나 앞말이 합성동사인 경우, 중간에 조사가 들어갈 때는 보조용언을 띄어 쓴다. '있다'는 보조동사나 보조형용사이나 보조적 연결어미 '고' 아래에 쓰여 그 동작이 계속됨을 의미하거나 보조적 연결어미 '아(어) 아랭 쓰여 본용언의 상태가 계속됨을 의미하므로 띄어 쓴다.",
+            "examples": [
+              {
+                "description": "보조용언 붙여쓰기",
+                "example": "버리다(죽여버리다), 간다(죽어간다), 내다(막아내다) 등"
+              },
+              {
+                "description": "조사 포함 시 띄어쓰기",
+                "example": "책을 읽어도 보고, 잘난 체를 한다 등"
+              },
+              {
+                "description": "'있다' 보조용언",
+                "example": "비관적인 전망이 나오고 있다. 앉아 있다. 서 있다."
+              }
+            ]
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-JUNG-012",
+            "category": "'중(中)'의 띄어쓰기",
+            "note": "합성어로 등재된 '중'은 붙여 쓰고, 그렇지 않은 경우는 띄어 씁니다.",
+            "description": "부재중 · 무의식중 · 은연중 · 한밤중 등의 '중'은 선행어와 붙여 쓴다. 합성어로 등재되지 않은 경우에는 띄어 써야 한다. 합성어로 등재된 단어는 다음과 같다.",
+            "example": "그중 · 총망중 · 허공중 · 은연중 · 한밤중 · 야밤중 · 부재중 · 부지불식중 · 부지중 · 무망중 · 부심중 · 무의식중 · 무전중 · 밤중 등"
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-DEPENDENT-NOUNS-013",
+            "category": "의존명사 띄어쓰기",
+            "note": "의존명사는 띄어 씁니다. 의존명사는 그 앞에 수식어가 오는 것이 특징입니다.",
+            "description": "의존명사는 띄어 쓴다. 일부 의존명사는 조사 · 어미 · 접미사와 형태가 같아서 구별해 써야 한다. 구별하는 요령은 의존명사는 그 앞에 수식어가 온다는 점을 염두에 두면 된다. 의존명사=뿐 · 대로 · 만큼 · 만 · 지 · 차 · 판 · 들 · 데 · 듯 · 중",
+            "example": "웃을 뿐이다, 약속한 대로 하겠다. 사흘 만에 돌아왔다."
+          },
+          {
+            "guideline_id": "SPACING-DETAILED-COMPOUND-NOUNS-014",
+            "category": "합성어로 인정된 명사",
+            "note": "특정 명사와 결합하여 합성어로 인정받은 경우는 붙여 씁니다.",
+            "description": "윗말과 굳어져 합성어로 인정받는 명사는 붙여 쓴다.",
+            "examples": [
+              {
+                "description": "'것'의 합성어",
+                "example": "이것 · 저것 · 날것 · 생것"
+              },
+              {
+                "description": "'번'의 합성어",
+                "example": "이번 · 요번 · 한번"
+              },
+              {
+                "description": "'이'의 합성어",
+                "example": "이가 · 저이 · 그이 · 늙은이"
+              },
+              {
+                "description": "'짝'의 합성어",
+                "example": "이짝 · 저짝 · 그짝"
+              },
+              {
+                "description": "'쪽'의 합성어",
+                "example": "위쪽 · 아래쪽 · 양쪽"
+              },
+              {
+                "description": "'편'의 합성어",
+                "example": "왼편 · 오른편 · 차편"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

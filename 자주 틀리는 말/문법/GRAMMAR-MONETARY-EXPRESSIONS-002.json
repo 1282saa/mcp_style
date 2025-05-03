@@ -1,0 +1,27 @@
+{
+  "rule_id": "ST-GUIDE-GRAMMAR-MONETARY-EXPRESSIONS-002",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "rule_path": ["작성원칙", "문법규칙", "금전표기"],
+        "hint": "금전 표기는 명확하고 일관되게 표현해야 합니다.",
+        "tags": ["문법", "표기", "금전", "수량"],
+        "rule_applicability": ["기사 작성", "편집", "경제기사"],
+        "classification": ["문법 규칙", "표기법"],
+        "keywords": ["금전", "표기", "여", "단위"],
+        "guideline": {
+          "guideline_id": "GRAMMAR-MONETARY-EXPRESSIONS-002",
+          "category": "금전 표기",
+          "note": "'여'의 표현은 단위 다음에 사용",
+          "explanation": "'여'는 한자어로 된 수사 뒤에 붙어 그 이상임을 나타냅니다.",
+          "before": "3억 8,000여만원",
+          "after": "3억 8,000만여원"
+        }
+      }
+    }
+  ]
+}

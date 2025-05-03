@@ -1,0 +1,34 @@
+{
+  "rule_id": "ST-GUIDE-GRAMMAR-MIDDLE-DOT-006",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "rule_path": ["작성원칙", "문법규칙", "가운뎃점사용"],
+        "hint": "가운뎃점은 명사 나열이나 분기 표현 시 유용합니다.",
+        "tags": ["문법", "부호", "표기"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["문법 규칙", "표기법"],
+        "keywords": ["가운뎃점", "중간점", "나열", "분기"],
+        "guideline": {
+          "guideline_id": "GRAMMAR-MIDDLE-DOT-006",
+          "category": "가운뎃점 사용",
+          "note": "분기를 나타낼 때나 명사의 단순 나열일 경우 사용",
+          "examples": [
+            {
+              "description": "분기 표기",
+              "example": "1·4분기, 2·4분기"
+            },
+            {
+              "description": "명사 나열",
+              "example": "세탁기·에어컨·전자레인지, 한국·중국·미국"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "rule_id": "ST-GUIDE-GRAMMAR-AFFIXES-005",
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "active",
+      "created_at": "2025-05-03T00:00:00Z",
+      "last_updated": "2025-05-03T00:00:00Z",
+      "structure": {
+        "rule_path": ["작성원칙", "문법규칙", "접사사용"],
+        "hint": "'하다'는 다양한 품사를 만드는 중요한 접사입니다.",
+        "tags": ["문법", "접사", "품사"],
+        "rule_applicability": ["기사 작성", "편집"],
+        "classification": ["문법 규칙", "어휘 선택"],
+        "keywords": ["접사", "하다", "품사변환", "동사화", "형용사화"],
+        "guideline": {
+          "guideline_id": "GRAMMAR-AFFIXES-005",
+          "category": "접사 사용",
+          "note": "'하다'는 접사로 단어의 품사를 바꿔준다",
+          "explanation": "'하다'는 여러 품사에 붙어 다양한 품사로 변환시키는 기능을 합니다.",
+          "examples": [
+            {
+              "description": "일부 명사에 붙어 동사나 형용사로 만듦",
+              "example": "공부하다, 노력하다, 착하다, 훌륭하다 등"
+            },
+            {
+              "description": "부사에 붙어 동사나 형용사로 만듦",
+              "example": "달랑달랑하다, 덜컹덜컹하다 등"
+            },
+            {
+              "description": "형용사의 보조적 연결어미 '아'나 '어'뒤에 붙어 동사로 만듦",
+              "example": "기뻐하다, 아파하다, 그리워하다 등"
+            },
+            {
+              "description": "의존명사 '체, 듯, 양' 등에 붙어 동사화해 보조형용사나 보조동사를 만듦",
+              "example": "모른 체하다, 아는 척하다 등"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
