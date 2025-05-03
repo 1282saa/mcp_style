@@ -43,6 +43,84 @@ app = Flask(__name__)
 stylebook_data = {}  # 로드된 스타일북 데이터
 metadata = {}  # 메타데이터
 
+# ---- 스미더리 MCP 엔드포인트 ----
+
+@app.route('/.well-known/mcp/smithery.json', methods=['GET'])
+def mcp_discovery():
+    """스미더리 MCP 검색 엔드포인트를 제공합니다."""
+    smithery_config = {
+        "type": "http",
+        "schema": {
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": ["get_metadata", "get_categories", "get_rule", "search", "claude_search", "download_json"],
+                    "description": "실행할 도구 이름"
+                },
+                "rule_id": {
+                    "type": "string",
+                    "description": "규칙 ID (get_rule, download_json 도구용)"
+                },
+                "query": {
+                    "type": "string",
+                    "description": "검색어 (search, claude_search 도구용)"
+                },
+                "desktop_port": {
+                    "type": "number",
+                    "description": "Claude 데스크톱 앱의 통신 포트 (기본값: 5000)"
+                }
+            },
+            "required": ["action"]
+        },
+        "examples": [
+            {
+                "action": "search",
+                "query": "외래어 표기법"
+            }
+        ]
+    }
+    return jsonify(smithery_config)
+
+# MCP API 엔드포인트
+@app.route('/mcp', methods=['POST'])
+def mcp_endpoint():
+    """스미더리 MCP API 엔드포인트"""
+    global stylebook_data
+    
+    data = request.json
+    
+    if not data:
+        return jsonify({"error": "요청 데이터가 없습니다."}), 400
+    
+    action = data.get("action")
+    if not action:
+        return jsonify({"error": "action이 필요합니다."}), 400
+    
+    # 요청된 액션에 따라 함수 실행
+    if action == "get_metadata":
+        result = get_metadata_func()
+    elif action == "get_categories":
+        result = get_categories_func()
+    elif action == "get_rule":
+        result = get_rule_func(data)
+    elif action == "search":
+        result = search_func(data)
+    elif action == "claude_search":
+        # 비동기 함수 호출
+        import asyncio
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            result = claude_search_func(data)
+        finally:
+            loop.close()
+    elif action == "download_json":
+        result = download_json_func(data)
+    else:
+        return jsonify({"error": f"알 수 없는 액션: {action}"}), 400
+    
+    return jsonify(result)
+
 # ---- 클로드 데스크톱 연동 ----
 
 class ClaudeDesktopIntegration:
@@ -728,7 +806,6 @@ def download_json_func(params):
             }
     
     return {"success": False, "message": f"규칙을 찾을 수 없습니다: {rule_id}"}
-# Python 파일 마지막 부분을 다음과 같이 수정
 
 def main():
     """메인 함수"""
@@ -758,6 +835,5 @@ def main():
         print(f"서울경제신문 스타일북 서버 시작 중... (http://{args.host}:{args.port}/)")
         app.run(host=args.host, port=args.port, debug=args.debug)
 
-# 직접 실행될 때만 main() 호출
 if __name__ == "__main__":
     main()
