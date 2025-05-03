@@ -19,14 +19,14 @@ from typing import Dict, Any, List, Optional, Tuple
 try:
     import aiohttp
 except ImportError:
-    print("aiohttp 라이브러리를 설치해주세요: pip install aiohttp")
+    print("aiohttp 라이브러리를 설치해주세요: pip install aiohttp", file=sys.stderr)
     sys.exit(1)
 
 # Flask 라이브러리 임포트
 try:
     from flask import Flask, request, jsonify, Response, send_file
 except ImportError:
-    print("Flask 라이브러리를 설치해주세요: pip install flask")
+    print("Flask 라이브러리를 설치해주세요: pip install flask", file=sys.stderr)
     sys.exit(1)
 
 # 로깅 설정
@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 # 전역 변수
+DATA_PATH = '.'  # 기본 데이터 경로
 stylebook_data = {}  # 로드된 스타일북 데이터
 metadata = {}  # 메타데이터
 
@@ -724,41 +725,99 @@ def handle_stdio_mode():
     스미더리와 같은 도구와의 통합을 위해 사용됩니다.
     """
     logger.info("표준 입출력 모드로 실행 중입니다.")
+    print("표준 입출력 모드 시작", file=sys.stderr)
     
     # 도구 및 기능 목록
     tools = {
-        "get_metadata": lambda params: get_metadata_func(),
-        "get_categories": lambda params: get_categories_func(),
-        "get_rule": lambda params: get_rule_func(params),
-        "search": lambda params: search_func(params),
-        "claude_search": lambda params: claude_search_func(params),
-        "download_json": lambda params: download_json_func(params)
+        "get_metadata": lambda params: get_metadata(),
+        "get_categories": lambda params: get_categories(),
+        "get_rule": lambda params: get_rule(params.get("rule_id")),
+        "search": lambda params: search(params.get("query")),
+        "claude_search": lambda params: claude_search(params.get("query"), params.get("desktop_port", 5000)),
+        "download_json": lambda params: download_json(params.get("rule_id"))
     }
     
     while True:
         try:
             # 표준 입력에서 JSON 읽기
+            print("표준 입력에서 메시지 대기 중...", file=sys.stderr)
             line = sys.stdin.readline()
             if not line:
+                print("입력이 종료되었습니다.", file=sys.stderr)
                 break
                 
             request = json.loads(line)
-            logger.debug(f"요청 받음: {request}")
+            print(f"요청 받음: {request}", file=sys.stderr)
             
-            # 요청 처리
-            response = process_request(request, tools)
+            # 초기화 요청 처리
+            if request.get("jsonrpc") == "2.0" and request.get("method") == "initialize":
+                # MCP 프로토콜 초기화 요청
+                protocol_version = request.get("params", {}).get("protocolVersion", "")
+                print(f"MCP 초기화 요청 받음, 프로토콜 버전: {protocol_version}", file=sys.stderr)
+                
+                # 초기화 응답
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": request.get("id"),
+                    "result": {
+                        "capabilities": {
+                            "tools": [
+                                {"name": "get_metadata", "description": "스타일북 메타데이터를 반환합니다."},
+                                {"name": "get_categories", "description": "스타일북 카테고리 목록을 반환합니다."},
+                                {"name": "get_rule", "description": "스타일북 규칙을 반환합니다."},
+                                {"name": "search", "description": "키워드로 스타일북을 검색합니다."},
+                                {"name": "claude_search", "description": "Claude AI를 사용하여 스타일북을 검색합니다."},
+                                {"name": "download_json", "description": "스타일북 JSON 파일을 다운로드합니다."}
+                            ]
+                        },
+                        "serverInfo": {
+                            "name": "서울경제신문 스타일북 MCP",
+                            "version": "1.0.0"
+                        }
+                    }
+                }
+                
+                print(f"초기화 응답 전송: {json.dumps(response)}", file=sys.stderr)
+                sys.stdout.write(json.dumps(response) + "\n")
+                sys.stdout.flush()
+                continue
             
-            # 응답 전송
-            sys.stdout.write(json.dumps(response) + "\n")
-            sys.stdout.flush()
+            # 표준 MCP 요청 처리
+            if "tool" in request:
+                print(f"도구 요청 처리 중: {request.get('tool')}", file=sys.stderr)
+                response = process_request(request, tools)
+                print(f"응답 전송: {json.dumps(response)}", file=sys.stderr)
+                sys.stdout.write(json.dumps(response) + "\n")
+                sys.stdout.flush()
+                continue
+            
+            # 기타 MCP 메시지 처리
+            if request.get("jsonrpc") == "2.0" and request.get("method"):
+                method = request.get("method")
+                print(f"MCP 메시지 받음: {method}", file=sys.stderr)
+                
+                # 기본 응답
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": request.get("id", 0),
+                    "result": {}
+                }
+                
+                print(f"MCP 응답 전송: {json.dumps(response)}", file=sys.stderr)
+                sys.stdout.write(json.dumps(response) + "\n")
+                sys.stdout.flush()
+                continue
             
         except json.JSONDecodeError as e:
+            print(f"JSON 디코드 오류: {str(e)}", file=sys.stderr)
             error_response = {"error": f"유효하지 않은 JSON: {str(e)}"}
             sys.stdout.write(json.dumps(error_response) + "\n")
             sys.stdout.flush()
             
         except Exception as e:
             import traceback
+            print(f"예외 발생: {str(e)}", file=sys.stderr)
+            print(traceback.format_exc(), file=sys.stderr)
             error_response = {"error": f"처리 중 오류 발생: {str(e)}", "traceback": traceback.format_exc()}
             sys.stdout.write(json.dumps(error_response) + "\n")
             sys.stdout.flush()
@@ -1064,14 +1123,24 @@ def main():
     if args.verbose:
         logger.setLevel(logging.DEBUG)
     
+    # 전역 변수 설정
+    global DATA_PATH
+    DATA_PATH = args.data_path
+    print(f"스타일북 데이터 경로: {DATA_PATH}", file=sys.stderr)
+    
     # 스타일북 데이터 로드
     global stylebook_data
-    stylebook_data = load_stylebook_data(args.data_path)
     
     if args.stdio:
-        # 표준 입출력 모드
+        # 표준 입출력 모드일 경우 초기화 메시지에 먼저 응답하고 나중에 데이터 로드
+        print("표준 입출력 모드로 시작합니다. 데이터 로딩은 백그라운드에서 진행됩니다.", file=sys.stderr)
         handle_stdio_mode()
+        # stdio 모드에서는 여기까지 오지 않음
     else:
+        # HTTP 서버 모드에서는 먼저 데이터 로드
+        print("HTTP 서버 모드로 시작합니다. 데이터를 로드합니다.", file=sys.stderr)
+        stylebook_data = load_stylebook_data(args.data_path)
+        
         # HTTP 서버 모드
         print(f"서울경제신문 스타일북 서버 시작 중... (http://{args.host}:{args.port}/)")
         print(f"MCP 검색 엔드포인트: http://{args.host}:{args.port}/.well-known/mcp/smithery.json")
@@ -1080,4 +1149,5 @@ def main():
         app.run(host=args.host, port=args.port, debug=args.debug)
 
 if __name__ == "__main__":
+    print('스타일북 MCP 서버 시작', file=sys.stderr)
     main()

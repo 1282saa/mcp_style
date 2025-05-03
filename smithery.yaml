@@ -22,7 +22,10 @@ startCommand:
     ({ config }) => {
       return {
         command: "python",
-        args: ["stylebook_mcp_server.py", "--stdio", "--port", String(config.port || 5012), "--data_path", config.data_path || "."],
-        env: {}
+        args: ["-u", "stylebook_mcp_server.py", "--stdio", "--verbose", "--port", String(config.port || 5012), "--data_path", config.data_path || "."],
+        env: {
+          "PYTHONUNBUFFERED": "1",
+          "PYTHONIOENCODING": "utf-8"
+        }
       }
     }
