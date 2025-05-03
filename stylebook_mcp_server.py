@@ -48,8 +48,14 @@ metadata = {}  # 메타데이터
 @app.route('/.well-known/mcp/smithery.json', methods=['GET'])
 def mcp_discovery():
     """스미더리 MCP 검색 엔드포인트를 제공합니다."""
+    logger.debug("MCP 검색 엔드포인트 호출됨")
+    
     smithery_config = {
+        "version": "1.0",
         "type": "http",
+        "name": "서울경제신문 스타일북 MCP",
+        "description": "스타일북 JSON 데이터를 조회하고 검색하는 MCP 서비스",
+        "endpoint": "/mcp",
         "schema": {
             "properties": {
                 "action": {
@@ -76,10 +82,29 @@ def mcp_discovery():
             {
                 "action": "search",
                 "query": "외래어 표기법"
+            },
+            {
+                "action": "get_metadata"
+            },
+            {
+                "action": "get_rule",
+                "rule_id": "ST-GUIDE-WRITING-001"
             }
         ]
     }
+    
+    logger.debug(f"MCP 검색 엔드포인트 응답: {smithery_config}")
     return jsonify(smithery_config)
+
+# 서버 상태 확인 엔드포인트
+@app.route('/health', methods=['GET'])
+def health_check():
+    """서버 상태 확인 엔드포인트"""
+    return jsonify({
+        "status": "ok",
+        "version": "1.0.0",
+        "loaded_items": len(stylebook_data)
+    })
 
 # MCP API 엔드포인트
 @app.route('/mcp', methods=['POST'])
@@ -87,14 +112,22 @@ def mcp_endpoint():
     """스미더리 MCP API 엔드포인트"""
     global stylebook_data
     
+    logger.debug(f"MCP API 엔드포인트 요청: {request.data.decode('utf-8') if request.data else None}")
+    
     data = request.json
     
     if not data:
-        return jsonify({"error": "요청 데이터가 없습니다."}), 400
+        error_msg = "요청 데이터가 없습니다."
+        logger.error(error_msg)
+        return jsonify({"error": error_msg}), 400
     
     action = data.get("action")
     if not action:
-        return jsonify({"error": "action이 필요합니다."}), 400
+        error_msg = "action이 필요합니다."
+        logger.error(error_msg)
+        return jsonify({"error": error_msg}), 400
+    
+    logger.debug(f"MCP 액션 요청: {action}")
     
     # 요청된 액션에 따라 함수 실행
     if action == "get_metadata":
@@ -117,8 +150,11 @@ def mcp_endpoint():
     elif action == "download_json":
         result = download_json_func(data)
     else:
-        return jsonify({"error": f"알 수 없는 액션: {action}"}), 400
+        error_msg = f"알 수 없는 액션: {action}"
+        logger.error(error_msg)
+        return jsonify({"error": error_msg}), 400
     
+    logger.debug(f"MCP 응답 결과: {result}")
     return jsonify(result)
 
 # ---- 클로드 데스크톱 연동 ----
@@ -237,8 +273,12 @@ def load_stylebook_data(base_path):
             with open(metadata_path, 'r', encoding='utf-8') as f:
                 metadata = json.load(f)
                 data["metadata"] = metadata
+                logger.info(f"메타데이터 로드됨: {metadata_path}")
+        else:
+            logger.warning(f"메타데이터 파일이 없습니다: {metadata_path}")
         
         # 모든 카테고리 및 파일 로드
+        file_count = 0
         for root, dirs, files in os.walk(base_path):
             for file in files:
                 if file.endswith(".json") and file != "metadata.json":
@@ -249,11 +289,12 @@ def load_stylebook_data(base_path):
                         with open(file_path, 'r', encoding='utf-8') as f:
                             file_data = json.load(f)
                             data[rel_path] = file_data
-                            logger.debug(f"로드됨: {rel_path}")
+                            file_count += 1
+                            logger.debug(f"파일 로드됨: {rel_path}")
                     except Exception as e:
                         logger.error(f"파일 로드 오류 ({file_path}): {str(e)}")
         
-        logger.info(f"스타일북 데이터 로드 완료: {len(data)} 항목")
+        logger.info(f"스타일북 데이터 로드 완료: {file_count}개 파일, 총 {len(data)} 항목")
         return data
     except Exception as e:
         logger.error(f"스타일북 데이터 로드 실패: {str(e)}")
@@ -269,6 +310,7 @@ def search_stylebook(query, data):
     results = []
     
     query = query.lower()
+    logger.info(f"검색 수행: '{query}'")
     
     # 메타데이터 제외하고 검색
     for path, content in data.items():
@@ -347,9 +389,28 @@ def search_stylebook(query, data):
             unique_results.append(result)
             seen_ids.add(result["rule_id"])
     
+    logger.info(f"검색 결과: {len(unique_results)}개 항목 발견")
     return {"results": unique_results}
 
 # ---- API 엔드포인트 ----
+
+@app.route('/', methods=['GET'])
+def index():
+    """
+    서버 기본 엔드포인트입니다.
+    """
+    return jsonify({
+        "name": "서울경제신문 스타일북 서버",
+        "version": "1.0.0",
+        "description": "스타일북 JSON 데이터를 조회하고 관리하는 서버",
+        "endpoints": [
+            "/.well-known/mcp/smithery.json - MCP 검색 엔드포인트",
+            "/mcp - MCP API 엔드포인트",
+            "/config - 설정 정보",
+            "/tools - 도구 목록",
+            "/health - 상태 확인"
+        ]
+    })
 
 @app.route('/config', methods=['GET'])
 def get_config():
@@ -833,6 +894,9 @@ def main():
     else:
         # HTTP 서버 모드
         print(f"서울경제신문 스타일북 서버 시작 중... (http://{args.host}:{args.port}/)")
+        print(f"MCP 검색 엔드포인트: http://{args.host}:{args.port}/.well-known/mcp/smithery.json")
+        print(f"MCP API 엔드포인트: http://{args.host}:{args.port}/mcp")
+        print(f"상태 확인 엔드포인트: http://{args.host}:{args.port}/health")
         app.run(host=args.host, port=args.port, debug=args.debug)
 
 if __name__ == "__main__":
