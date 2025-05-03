@@ -2,8 +2,8 @@
 
 startCommand:
   type: stdio
-  configSchema:
-    type: "object"
+  command: ["python", "stylebook_mcp_server.py", "--stdio", "--data_path", "."]
+  schema:
     properties:
       action:
         type: "string"
@@ -17,27 +17,16 @@ startCommand:
             "download_json",
           ]
         description: "실행할 도구 이름"
-      parameters:
-        type: "object"
-        properties:
-          rule_id:
-            type: "string"
-            description: "규칙 ID (get_rule, download_json 도구용)"
-          query:
-            type: "string"
-            description: "검색어 (search, claude_search 도구용)"
-          desktop_port:
-            type: "integer"
-            description: "Claude 데스크톱 앱의 통신 포트 (기본값: 5000)"
-  commandFunction:
-    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
-    |-
-    (config) => ({
-      command: 'python',
-      args: ['stylebook_mcp_server.py', '--stdio', '--data_path', '.'],
-      env: {}
-    })
-  exampleConfig:
-    action: "search"
-    parameters:
+      rule_id:
+        type: "string"
+        description: "규칙 ID (get_rule, download_json 도구용)"
+      query:
+        type: "string"
+        description: "검색어 (search, claude_search 도구용)"
+      desktop_port:
+        type: "number"
+        description: "Claude 데스크톱 앱의 통신 포트 (기본값: 5000)"
+    required: ["action"]
+  examples:
+    - action: "search"
       query: "외래어 표기법"
