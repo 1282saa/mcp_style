@@ -38,8 +38,15 @@ logger = logging.getLogger(__name__)
 
 # 전역 변수
 DATA_PATH = '.'  # 기본 데이터 경로
-stylebook_data = {}  # 로드된 스타일북 데이터
+stylebook_data = {
+    "metadata": {
+        "name": "서울경제신문 스타일북", 
+        "version": "1.0.0",
+        "status": "초기화 중"
+    }
+}  # 초기 데이터 구조 (즉시 응답을 위해)
 start_time = time.time()  # 서버 시작 시간
+is_data_loaded = False  # 데이터 로드 완료 여부
 
 # 스크립트 파일의 경로
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -86,7 +93,14 @@ def load_stylebook_data(base_path):
     resolved_path = resolve_path(base_path)
     logger.info(f"데이터 로드 경로: {resolved_path} (원본 경로: {base_path})")
     
-    data = {}
+    data = {
+        "metadata": {
+            "name": "서울경제신문 스타일북", 
+            "version": "1.0.0",
+            "status": "로드 중"
+        }
+    }
+    
     try:
         # 메타데이터 로드
         metadata_path = os.path.join(resolved_path, "metadata.json")
@@ -98,6 +112,7 @@ def load_stylebook_data(base_path):
             with open(metadata_path, 'r', encoding='utf-8') as f:
                 metadata = json.load(f)
                 data["metadata"] = metadata
+                data["metadata"]["status"] = "메타데이터 로드됨"
                 logger.info(f"메타데이터 로드됨: {metadata_path}")
         else:
             logger.warning(f"메타데이터 파일이 없습니다. 다음 위치에서 찾아봤습니다: {os.path.join(resolved_path, 'metadata.json')}, {os.path.join(resolved_path, '_meta.json')}")
@@ -118,15 +133,26 @@ def load_stylebook_data(base_path):
                             file_data = json.load(f)
                             data[rel_path] = file_data
                             file_count += 1
-                            logger.debug(f"파일 로드됨: {rel_path}")
+                            if file_count % 10 == 0:  # 로그 줄이기
+                                logger.debug(f"파일 로드 중: {file_count}개...")
                     except Exception as e:
                         logger.error(f"파일 로드 오류 ({file_path}): {str(e)}")
         
+        if "metadata" in data:
+            data["metadata"]["status"] = "로드 완료"
+            
         logger.info(f"스타일북 데이터 로드 완료: {file_count}개 파일, 총 {len(data)} 항목")
         return data
     except Exception as e:
         logger.error(f"스타일북 데이터 로드 실패: {str(e)}")
-        return {}
+        # 오류 발생해도 최소한의 데이터는 유지
+        return {
+            "metadata": {
+                "name": "서울경제신문 스타일북", 
+                "version": "1.0.0",
+                "status": f"오류: {str(e)}"
+            }
+        }
 
 def get_server_stats():
     """
@@ -140,15 +166,168 @@ def get_server_stats():
     process = psutil.Process(os.getpid())
     memory_usage = process.memory_info().rss / (1024 * 1024)  # MB 단위
     
+    global is_data_loaded
+    
     return {
         "uptime": uptime_str,
         "memory_usage": f"{memory_usage:.2f} MB",
         "pid": os.getpid(),
         "data_path": resolve_path(DATA_PATH),
-        "python_version": sys.version
+        "python_version": sys.version,
+        "data_loaded": is_data_loaded
     }
 
 # ---- MCP 프로토콜 메서드 ----
+
+@mcp.route("tools/list")
+def handle_tools_list():
+    """
+    MCP 프로토콜의 tools/list 메서드 구현
+    클라이언트가 사용 가능한 도구 목록을 즉시 반환합니다.
+    """
+    logger.debug("tools/list 메서드 호출됨")
+    
+    # 데이터 로드 여부와 관계없이 즉시 도구 목록 반환
+    return {
+        "tools": [
+            {
+                "name": "get_metadata",
+                "description": "스타일북 메타데이터를 반환합니다.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                },
+                "returns": {
+                    "type": "object",
+                    "properties": {
+                        "metadata": {
+                            "type": "object",
+                            "description": "스타일북 메타데이터"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "get_categories",
+                "description": "스타일북 카테고리 목록을 반환합니다.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                },
+                "returns": {
+                    "type": "object",
+                    "properties": {
+                        "categories": {
+                            "type": "array",
+                            "description": "카테고리 목록"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "get_rule",
+                "description": "스타일북 규칙을 반환합니다.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "rule_id": {
+                            "type": "string",
+                            "description": "규칙 ID"
+                        }
+                    },
+                    "required": ["rule_id"]
+                },
+                "returns": {
+                    "type": "object",
+                    "properties": {
+                        "rule": {
+                            "type": "object",
+                            "description": "규칙 정보"
+                        },
+                        "path": {
+                            "type": "string",
+                            "description": "규칙 파일 경로"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "search",
+                "description": "키워드로 스타일북을 검색합니다.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "description": "검색어"
+                        }
+                    },
+                    "required": ["query"]
+                },
+                "returns": {
+                    "type": "object",
+                    "properties": {
+                        "results": {
+                            "type": "array",
+                            "description": "검색 결과 목록"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "claude_search",
+                "description": "Claude AI를 사용하여 스타일북을 검색합니다.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "description": "검색어"
+                        },
+                        "desktop_port": {
+                            "type": "integer",
+                            "description": "Claude 데스크톱 앱의 통신 포트 (기본값: 5000)"
+                        }
+                    },
+                    "required": ["query"]
+                },
+                "returns": {
+                    "type": "object",
+                    "properties": {
+                        "results": {
+                            "type": "array",
+                            "description": "검색 결과 목록"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "download_json",
+                "description": "스타일북 JSON 파일을 다운로드합니다.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "rule_id": {
+                            "type": "string",
+                            "description": "규칙 ID (선택: 없으면 전체 데이터)"
+                        }
+                    },
+                    "required": []
+                },
+                "returns": {
+                    "type": "object",
+                    "properties": {
+                        "full_data": {
+                            "type": "object",
+                            "description": "전체 스타일북 데이터"
+                        }
+                    }
+                }
+            }
+        ]
+    }
 
 @mcp.route("resources/list")
 def handle_resources_list():
@@ -183,6 +362,7 @@ def debug_status():
         "pid": stats["pid"],
         "data_path": stats["data_path"],
         "python_version": stats["python_version"],
+        "data_loaded": stats["data_loaded"],
         "categories": list(stylebook_data.keys())[:5] + ["..."] if len(stylebook_data) > 5 else list(stylebook_data.keys())
     }
 
@@ -223,11 +403,14 @@ def get_rule(rule_id: str) -> Dict:
     
     :param rule_id: 규칙 ID
     """
-    global stylebook_data
+    global stylebook_data, is_data_loaded
     logger.debug(f"규칙 조회 함수 호출: {rule_id}")
     
     if not rule_id:
         return {"error": "규칙 ID가 필요합니다."}
+    
+    if not is_data_loaded:
+        return {"error": "데이터 로드 중입니다. 잠시 후 다시 시도해주세요."}
     
     # 모든 파일에서 해당 rule_id 검색
     for path, content in stylebook_data.items():
@@ -249,68 +432,84 @@ def search(query: str) -> Dict:
     
     :param query: 검색어
     """
-    global stylebook_data
+    global stylebook_data, is_data_loaded
     logger.debug(f"검색 함수 호출: {query}")
     
     if not query:
         return {"error": "검색어가 필요합니다."}
     
+    if not is_data_loaded:
+        return {"error": "데이터 로드 중입니다. 잠시 후 다시 시도해주세요."}
+    
     results = []
     query = query.lower()
     
-    # 메타데이터 제외하고 검색
-    for path, content in stylebook_data.items():
-        if path == "metadata":
-            continue
-            
-        # 규칙 ID, 제목, 설명 등에서 검색
-        if "rule_id" in content and query in content["rule_id"].lower():
-            results.append({
-                "rule_id": content["rule_id"],
-                "path": path,
-                "title": content.get("versions", [{}])[0].get("structure", {}).get("title", ""),
-                "description": content.get("versions", [{}])[0].get("structure", {}).get("description", ""),
-                "relevance": 8
-            })
-            continue
-            
-        # 버전 및 구조 정보 검색
-        for version in content.get("versions", []):
-            structure = version.get("structure", {})
-            
-            # 제목 검색
-            if "title" in structure and query in structure["title"].lower():
+    # 제한 시간 설정 (최대 30초)
+    start_search_time = time.time()
+    max_search_time = 30
+    
+    try:
+        # 메타데이터 제외하고 검색
+        for path, content in stylebook_data.items():
+            # 시간 초과 확인
+            if time.time() - start_search_time > max_search_time:
+                logger.warning(f"검색 시간 초과 (30초): 검색을 중단합니다. 현재까지 {len(results)}개 결과 발견")
+                break
+                
+            if path == "metadata":
+                continue
+                
+            # 규칙 ID, 제목, 설명 등에서 검색
+            if "rule_id" in content and query in content["rule_id"].lower():
                 results.append({
-                    "rule_id": content.get("rule_id", ""),
+                    "rule_id": content["rule_id"],
                     "path": path,
-                    "title": structure["title"],
-                    "description": structure.get("description", ""),
-                    "relevance": 9
+                    "title": content.get("versions", [{}])[0].get("structure", {}).get("title", ""),
+                    "description": content.get("versions", [{}])[0].get("structure", {}).get("description", ""),
+                    "relevance": 8
                 })
                 continue
                 
-            # 설명 검색
-            if "description" in structure and query in structure["description"].lower():
-                results.append({
-                    "rule_id": content.get("rule_id", ""),
-                    "path": path,
-                    "title": structure.get("title", ""),
-                    "description": structure["description"],
-                    "relevance": 7
-                })
-                continue
-    
-    # 중복 제거 및 관련성 점수로 정렬
-    unique_results = []
-    seen_ids = set()
-    
-    for result in sorted(results, key=lambda x: x["relevance"], reverse=True):
-        if result["rule_id"] not in seen_ids:
-            unique_results.append(result)
-            seen_ids.add(result["rule_id"])
-    
-    logger.info(f"검색 결과: {len(unique_results)}개 항목 발견")
-    return {"results": unique_results}
+            # 버전 및 구조 정보 검색
+            for version in content.get("versions", []):
+                structure = version.get("structure", {})
+                
+                # 제목 검색
+                if "title" in structure and query in structure["title"].lower():
+                    results.append({
+                        "rule_id": content.get("rule_id", ""),
+                        "path": path,
+                        "title": structure["title"],
+                        "description": structure.get("description", ""),
+                        "relevance": 9
+                    })
+                    continue
+                    
+                # 설명 검색
+                if "description" in structure and query in structure["description"].lower():
+                    results.append({
+                        "rule_id": content.get("rule_id", ""),
+                        "path": path,
+                        "title": structure.get("title", ""),
+                        "description": structure["description"],
+                        "relevance": 7
+                    })
+                    continue
+        
+        # 중복 제거 및 관련성 점수로 정렬
+        unique_results = []
+        seen_ids = set()
+        
+        for result in sorted(results, key=lambda x: x["relevance"], reverse=True):
+            if result["rule_id"] not in seen_ids:
+                unique_results.append(result)
+                seen_ids.add(result["rule_id"])
+        
+        logger.info(f"검색 결과: {len(unique_results)}개 항목 발견")
+        return {"results": unique_results}
+    except Exception as e:
+        logger.error(f"검색 중 오류 발생: {str(e)}")
+        return {"error": f"검색 처리 중 오류: {str(e)}", "results": results[:5] if results else []}
 
 @mcp.tool()
 async def claude_search(query: str, desktop_port: int = 5000) -> Dict:
@@ -357,7 +556,8 @@ async def claude_search(query: str, desktop_port: int = 5000) -> Dict:
     
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.post(claude_url, json=message) as response:
+            # 요청 타임아웃 설정 (60초)
+            async with session.post(claude_url, json=message, timeout=60) as response:
                 if response.status == 200:
                     result = await response.json()
                     
@@ -379,6 +579,9 @@ async def claude_search(query: str, desktop_port: int = 5000) -> Dict:
                     error_text = await response.text()
                     logger.error(f"Claude 데스크톱 오류 (상태 코드: {response.status}): {error_text}")
                     return {"error": f"Claude 데스크톱 오류 (상태 코드: {response.status})"}
+    except asyncio.TimeoutError:
+        logger.error("Claude API 요청 타임아웃")
+        return {"error": "Claude API 요청이 시간 초과되었습니다."}
     except Exception as e:
         logger.error(f"Claude 데스크톱 연결 오류: {str(e)}")
         return {"error": f"Claude 데스크톱 연결 오류: {str(e)}"}
@@ -390,8 +593,11 @@ def download_json(rule_id: Optional[str] = None) -> Dict:
     
     :param rule_id: 규칙 ID (선택: 없으면 전체 데이터)
     """
-    global stylebook_data
+    global stylebook_data, is_data_loaded
     logger.debug(f"JSON 다운로드 함수 호출: {rule_id if rule_id else '전체'}")
+    
+    if not is_data_loaded:
+        return {"error": "데이터 로드 중입니다. 잠시 후 다시 시도해주세요."}
     
     # rule_id가 없으면 전체 데이터 반환
     if not rule_id:
@@ -414,11 +620,15 @@ def log_monitor_thread():
     서버 로그를 주기적으로 모니터링하고 상태를 기록하는 스레드
     """
     while True:
-        stats = get_server_stats()
-        loaded_data_count = len(stylebook_data) if stylebook_data else 0
-        
-        logger.info(f"서버 상태: 업타임={stats['uptime']}, 메모리={stats['memory_usage']}, 로드된 데이터={loaded_data_count}개")
-        time.sleep(300)  # 5분마다 상태 로깅
+        try:
+            stats = get_server_stats()
+            loaded_data_count = len(stylebook_data) if stylebook_data else 0
+            
+            logger.info(f"서버 상태: 업타임={stats['uptime']}, 메모리={stats['memory_usage']}, 로드된 데이터={loaded_data_count}개")
+            time.sleep(300)  # 5분마다 상태 로깅
+        except Exception as e:
+            logger.error(f"로그 모니터링 오류: {str(e)}")
+            time.sleep(60)  # 오류 발생 시 1분 후 재시도
 
 # ---- 메인 함수 ----
 
@@ -431,6 +641,7 @@ def main():
     parser.add_argument('--host', default='0.0.0.0', help='HTTP 모드 호스트')
     parser.add_argument('--data_path', default='.', help='스타일북 데이터 경로')
     parser.add_argument('--verbose', action='store_true', help='자세한 로깅')
+    parser.add_argument('--startup_timeout', type=int, default=30, help='시작 시 데이터 로드 최대 대기 시간(초)')
     
     args = parser.parse_args()
     
@@ -441,43 +652,57 @@ def main():
         logger.setLevel(logging.INFO)
     
     # 전역 변수 설정
-    global DATA_PATH
+    global DATA_PATH, stylebook_data, is_data_loaded
     DATA_PATH = args.data_path
     logger.info(f"스타일북 데이터 경로: {DATA_PATH}")
     
+    # 데이터 로드 완료 이벤트
+    data_load_event = threading.Event()
+    
     # 데이터 로드 (비동기적으로)
     def load_data():
-        global stylebook_data
-        stylebook_data = load_stylebook_data(args.data_path)
-        
-        # 데이터가 없으면 데이터 경로 자동 탐색
-        if not stylebook_data:
-            logger.warning(f"지정된 경로 {args.data_path}에서 데이터를 찾을 수 없습니다. 다른 경로를 탐색합니다.")
+        global stylebook_data, is_data_loaded
+        try:
+            loaded_data = load_stylebook_data(args.data_path)
             
-            # 가능한 데이터 디렉토리 목록
-            possible_dirs = [
-                "기사 작성 준칙",
-                "기사작성 요령",
-                "자주 틀리는 말",
-                "제목과 레이아웃_제목달기",
-                "제목과 레이아웃_레이아웃 요령",
-                "기사 작성 준칙",
-                "뉴스가치 판단"
-            ]
+            # 데이터가 없으면 데이터 경로 자동 탐색
+            if len(loaded_data) <= 1:  # 메타데이터만 있는 경우
+                logger.warning(f"지정된 경로 {args.data_path}에서 데이터를 찾을 수 없습니다. 다른 경로를 탐색합니다.")
+                
+                # 가능한 데이터 디렉토리 목록
+                possible_dirs = [
+                    "기사 작성 준칙",
+                    "기사작성 요령",
+                    "자주 틀리는 말",
+                    "제목과 레이아웃_제목달기",
+                    "제목과 레이아웃_레이아웃 요령",
+                    "기사 작성 준칙",
+                    "뉴스가치 판단"
+                ]
+                
+                # 가능한 디렉토리 확인
+                for dir_name in possible_dirs:
+                    # 스크립트 디렉토리 기준 확인
+                    check_path = os.path.join(SCRIPT_DIR, dir_name)
+                    if os.path.exists(check_path) and os.path.isdir(check_path):
+                        logger.info(f"데이터 경로 자동 탐색: {check_path}")
+                        loaded_data = load_stylebook_data(check_path)
+                        if len(loaded_data) > 1:  # 메타데이터 외 데이터가 있는 경우
+                            break
             
-            # 가능한 디렉토리 확인
-            for dir_name in possible_dirs:
-                # 스크립트 디렉토리 기준 확인
-                check_path = os.path.join(SCRIPT_DIR, dir_name)
-                if os.path.exists(check_path) and os.path.isdir(check_path):
-                    logger.info(f"데이터 경로 자동 탐색: {check_path}")
-                    stylebook_data = load_stylebook_data(check_path)
-                    if stylebook_data:
-                        break
-            
-            # 그래도 데이터가 없으면 경고
-            if not stylebook_data:
-                logger.warning("데이터를 찾을 수 없습니다. 빈 데이터로 시작합니다.")
+            # 데이터 로드 완료
+            stylebook_data = loaded_data
+            is_data_loaded = True
+            if "metadata" in stylebook_data:
+                stylebook_data["metadata"]["status"] = "로드 완료"
+                
+            # 데이터 로드 완료 이벤트 설정
+            data_load_event.set()
+        except Exception as e:
+            logger.error(f"데이터 로드 스레드 오류: {str(e)}")
+            # 오류 발생 시에도 로드 완료 처리
+            is_data_loaded = True
+            data_load_event.set()
     
     # 데이터 로드 스레드 시작
     data_thread = threading.Thread(target=load_data)
@@ -489,19 +714,39 @@ def main():
     log_thread.daemon = True
     log_thread.start()
     
-    # 기본 데이터 구조 초기화 (서버 즉시 응답 가능하도록)
-    if not stylebook_data:
-        stylebook_data["metadata"] = {"name": "서울경제신문 스타일북", "version": "1.0.0"}
+    # 데이터 로드 대기 (타임아웃 설정)
+    logger.info(f"데이터 로드 대기 중 (최대 {args.startup_timeout}초)...")
+    data_loaded = data_load_event.wait(timeout=args.startup_timeout)
     
-    if args.http:
-        # HTTP 모드로 실행
-        logger.info(f"HTTP 모드로 시작합니다 (http://{args.host}:{args.port})...")
-        mcp.run(transport="http", host=args.host, port=args.port)
-    else:
-        # 표준 입출력 모드 (기본)
-        logger.info("표준 입출력 모드로 시작합니다...")
-        mcp.run(transport="stdio")
+    if not data_loaded:
+        logger.warning(f"데이터 로드 타임아웃 ({args.startup_timeout}초). 데이터 로드 완료 전에 서버를 시작합니다.")
+    
+    # 서버 시작 전 초기 데이터 확인
+    if "metadata" not in stylebook_data:
+        stylebook_data["metadata"] = {"name": "서울경제신문 스타일북", "version": "1.0.0", "status": "초기화 중"}
+    
+    # 트랜스포트 모드 설정에 따라 서버 실행
+    try:
+        if args.http:
+            # HTTP 모드로 실행
+            logger.info(f"HTTP 모드로 시작합니다 (http://{args.host}:{args.port})...")
+            mcp.run(transport="http", host=args.host, port=args.port)
+        else:
+            # 표준 입출력 모드 (기본)
+            logger.info("표준 입출력 모드로 시작합니다...")
+            mcp.run(transport="stdio")
+    except Exception as e:
+        logger.error(f"서버 실행 오류: {str(e)}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     logger.info("스타일북 MCP 서버 (FastMCP) 시작")
-    main() 
+    
+    try:
+        import asyncio
+        main()
+    except KeyboardInterrupt:
+        logger.info("사용자에 의해 서버가 종료되었습니다.")
+    except Exception as e:
+        logger.error(f"서버 실행 중 예외 발생: {str(e)}")
+        sys.exit(1) 

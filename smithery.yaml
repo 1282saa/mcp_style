@@ -4,6 +4,7 @@ displayName: 서울경제신문 스타일북 MCP
 description: 서울경제신문 스타일북을 검색하고 조회할 수 있는 MCP 서버
 icon: 📚
 author: 서울경제신문
+timeout: 180 # 타임아웃 3분으로 설정 (기본값은 60초)
 startCommand:
   type: stdio
   configSchema:
@@ -17,6 +18,10 @@ startCommand:
         type: string
         default: "."
         description: 스타일북 데이터 경로
+      startup_timeout:
+        type: number
+        default: 30
+        description: 서버 시작 시 데이터 로드 대기 시간(초)
     required: []
   commandFunction: |
     ({ config }) => {
@@ -25,11 +30,23 @@ startCommand:
       
       return {
         command: "python",
-        args: ["-u", scriptPath, "--stdio", "--verbose", "--data_path", config.data_path || "."],
+        args: [
+          "-u", 
+          scriptPath, 
+          "--stdio", 
+          "--verbose", 
+          "--data_path", 
+          config.data_path || ".",
+          "--startup_timeout", 
+          config.startup_timeout || "30"
+        ],
         env: {
           "PYTHONUNBUFFERED": "1",
           "PYTHONIOENCODING": "utf-8",
-          "PYTHONFLAGS": "-u"
+          "PYTHONFLAGS": "-u",
+          "DEBUG_MCP": "1",
+          "MCP_TIMEOUT": "180",
+          "LANG": "ko_KR.UTF-8"
         }
       }
     }
