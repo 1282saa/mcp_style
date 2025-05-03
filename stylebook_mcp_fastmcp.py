@@ -12,6 +12,7 @@ import os
 import sys
 import time
 import threading
+import asyncio
 import psutil
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -743,7 +744,6 @@ if __name__ == "__main__":
     logger.info("스타일북 MCP 서버 (FastMCP) 시작")
     
     try:
-        import asyncio
         main()
     except KeyboardInterrupt:
         logger.info("사용자에 의해 서버가 종료되었습니다.")
