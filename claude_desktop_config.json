@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "stylebook": {
+      "command": "python",
+      "args": [
+        "-u",
+        "stylebook_mcp_fastmcp.py",
+        "--stdio",
+        "--verbose",
+        "--data_path",
+        "."
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1",
+        "PYTHONIOENCODING": "utf-8",
+        "DEBUG_MCP": "1",
+        "PYWINTRACE": "mcp_server.*",
+        "LANG": "ko_KR.UTF-8",
+        "MCP_TIMEOUT": "120"
+      }
+    }
+  }
+}

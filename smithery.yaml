@@ -20,9 +20,12 @@ startCommand:
     required: []
   commandFunction: |
     ({ config }) => {
+      // 스크립트 파일의 상대 경로를 구성합니다
+      const scriptPath = "stylebook_mcp_fastmcp.py";
+      
       return {
         command: "python",
-        args: ["-u", "stylebook_mcp_server.py", "--stdio", "--verbose", "--port", String(config.port || 5012), "--data_path", config.data_path || "."],
+        args: ["-u", scriptPath, "--stdio", "--verbose", "--data_path", config.data_path || "."],
         env: {
           "PYTHONUNBUFFERED": "1",
           "PYTHONIOENCODING": "utf-8",
