@@ -1,8 +1,19 @@
 # Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
 
 startCommand:
-  type: stdio
-  command: ["python", "stylebook_mcp_server.py", "--stdio", "--data_path", "."]
+  type: http
+  port: 5012
+  command:
+    [
+      "python",
+      "stylebook_mcp_server.py",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "5012",
+      "--data_path",
+      ".",
+    ]
   schema:
     properties:
       action:
