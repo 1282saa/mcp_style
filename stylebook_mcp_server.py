@@ -56,16 +56,24 @@ def mcp_discovery():
         "name": "서울경제신문 스타일북 MCP",
         "description": "스타일북 JSON 데이터를 조회하고 검색하는 MCP 서비스",
         "endpoint": "/mcp",
-        "tools": [  # 스키마 대신 도구 목록 직접 제공
+        "tools": [
             {
                 "name": "get_metadata",
                 "description": "스타일북 메타데이터를 반환합니다.",
-                "parameters": {}
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
             },
             {
                 "name": "get_categories",
                 "description": "스타일북 카테고리 목록을 반환합니다.",
-                "parameters": {}
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
             },
             {
                 "name": "get_rule",
@@ -83,7 +91,7 @@ def mcp_discovery():
             },
             {
                 "name": "search",
-                "description": "스타일북에서 검색합니다.",
+                "description": "키워드로 스타일북을 검색합니다.",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -97,7 +105,7 @@ def mcp_discovery():
             },
             {
                 "name": "claude_search",
-                "description": "Claude를 사용하여 스타일북에서 검색합니다.",
+                "description": "Claude AI를 사용하여 스타일북을 검색합니다.",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -123,13 +131,14 @@ def mcp_discovery():
                             "type": "string",
                             "description": "규칙 ID (선택: 없으면 전체 데이터)"
                         }
-                    }
+                    },
+                    "required": []
                 }
             }
         ],
         "examples": [
             {
-                "tool": "search",  # action 대신 tool 사용
+                "tool": "search",
                 "parameters": {
                     "query": "외래어 표기법"
                 }
@@ -163,53 +172,47 @@ def health_check():
 # MCP API 엔드포인트
 @app.route('/mcp', methods=['POST'])
 def mcp_endpoint():
-    """스미더리 MCP API 엔드포인트"""
-    global stylebook_data
+    """MCP API 엔드포인트를 처리합니다."""
+    try:
+        data = request.json
+        logger.debug(f"MCP 요청 데이터: {data}")
+        
+        if not data:
+            return jsonify({"error": "요청 데이터가 없습니다."}), 400
+        
+        # 'tool' 필드 확인 (action 대신 tool 사용)
+        tool = data.get('tool')
+        if not tool:
+            return jsonify({"error": "필수 필드 'tool'이 없습니다."}), 400
+        
+        # 파라미터 가져오기
+        parameters = data.get('parameters', {})
+        logger.debug(f"도구: {tool}, 파라미터: {parameters}")
+        
+        # 도구 호출 함수 매핑
+        tool_functions = {
+            'get_metadata': get_metadata,
+            'get_categories': get_categories,
+            'get_rule': get_rule,
+            'search': search,
+            'claude_search': claude_search,
+            'download_json': download_json
+        }
+        
+        # 도구 존재 여부 확인
+        if tool not in tool_functions:
+            return jsonify({"error": f"지원하지 않는 도구입니다: {tool}"}), 400
+        
+        # 도구 호출
+        result = tool_functions[tool](**parameters)
+        logger.debug(f"도구 호출 결과: {result}")
+        
+        # 결과 반환
+        return jsonify(result)
     
-    logger.debug(f"MCP API 엔드포인트 요청: {request.data.decode('utf-8') if request.data else None}")
-    
-    data = request.json
-    
-    if not data:
-        error_msg = "요청 데이터가 없습니다."
-        logger.error(error_msg)
-        return jsonify({"error": error_msg}), 400
-    
-    action = data.get("action")
-    if not action:
-        error_msg = "action이 필요합니다."
-        logger.error(error_msg)
-        return jsonify({"error": error_msg}), 400
-    
-    logger.debug(f"MCP 액션 요청: {action}")
-    
-    # 요청된 액션에 따라 함수 실행
-    if action == "get_metadata":
-        result = get_metadata_func()
-    elif action == "get_categories":
-        result = get_categories_func()
-    elif action == "get_rule":
-        result = get_rule_func(data)
-    elif action == "search":
-        result = search_func(data)
-    elif action == "claude_search":
-        # 비동기 함수 호출
-        import asyncio
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            result = claude_search_func(data)
-        finally:
-            loop.close()
-    elif action == "download_json":
-        result = download_json_func(data)
-    else:
-        error_msg = f"알 수 없는 액션: {action}"
-        logger.error(error_msg)
-        return jsonify({"error": error_msg}), 400
-    
-    logger.debug(f"MCP 응답 결과: {result}")
-    return jsonify(result)
+    except Exception as e:
+        logger.error(f"MCP 엔드포인트 오류: {str(e)}", exc_info=True)
+        return jsonify({"error": f"서버 오류: {str(e)}"}), 500
 
 # ---- 클로드 데스크톱 연동 ----
 
@@ -792,135 +795,258 @@ def process_request(request, tools):
         return {"error": f"도구 실행 오류: {str(e)}", "traceback": traceback.format_exc()}
 
 # 도구 기능 구현
-def get_metadata_func():
+def get_metadata():
     """스타일북 메타데이터를 반환합니다."""
-    global stylebook_data
+    logger.debug("메타데이터 조회 함수 호출")
+    metadata_path = os.path.join(DATA_PATH, "metadata.json")
     
-    if "metadata" not in stylebook_data:
-        return {"success": False, "message": "메타데이터를 찾을 수 없습니다."}
-    
-    return {
-        "success": True,
-        "metadata": stylebook_data["metadata"]
-    }
-
-def get_categories_func():
-    """스타일북 카테고리 목록을 반환합니다."""
-    global stylebook_data
-    
-    if "metadata" not in stylebook_data:
-        return {"success": False, "message": "메타데이터를 찾을 수 없습니다."}
-    
-    categories = stylebook_data["metadata"].get("structure", {}).get("categories", [])
-    
-    return {
-        "success": True,
-        "categories": categories
-    }
-
-def get_rule_func(params):
-    """스타일북 규칙을 반환합니다."""
-    global stylebook_data
-    
-    rule_id = params.get("rule_id")
-    
-    if not rule_id:
-        return {"success": False, "message": "rule_id가 필요합니다."}
-    
-    # 모든 파일에서 해당 rule_id 검색
-    for path, content in stylebook_data.items():
-        if path == "metadata":
-            continue
-            
-        if content.get("rule_id") == rule_id:
-            return {
-                "success": True,
-                "rule": content,
-                "path": path
-            }
-    
-    return {"success": False, "message": f"규칙을 찾을 수 없습니다: {rule_id}"}
-
-def search_func(params):
-    """스타일북에서 검색합니다."""
-    global stylebook_data
-    
-    query = params.get("query")
-    
-    if not query:
-        return {"success": False, "message": "query가 필요합니다."}
-    
-    # 검색 수행
-    results = search_stylebook(query, stylebook_data)
-    
-    return {
-        "success": True,
-        "query": query,
-        "results": results["results"]
-    }
-
-def claude_search_func(params):
-    """Claude를 사용하여 스타일북에서 검색합니다."""
-    query = params.get("query")
-    desktop_port = int(params.get("desktop_port", 5000))
-    
-    if not query:
-        return {"success": False, "message": "query가 필요합니다."}
-    
-    # Claude 데스크톱 연동 초기화
-    claude_integration = ClaudeDesktopIntegration(desktop_port=desktop_port)
-    
-    # 비동기 함수 호출을 위한 이벤트 루프 사용
-    import asyncio
+    if not os.path.exists(metadata_path):
+        logger.error(f"메타데이터 파일을 찾을 수 없습니다: {metadata_path}")
+        return {"error": "메타데이터 파일을 찾을 수 없습니다."}
     
     try:
-        # 이벤트 루프 가져오기
-        loop = asyncio.get_event_loop()
-    except RuntimeError:
-        # 이벤트 루프가 없는 경우 새로 생성
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-    
-    # Claude로 검색 수행
-    search_results = loop.run_until_complete(claude_integration.search_stylebook(query))
-    
-    if isinstance(search_results, dict) and "error" in search_results:
-        return {"success": False, "message": search_results["error"]}
-    
-    return {
-        "success": True,
-        "query": query,
-        "results": search_results.get("results", [])
-    }
+        with open(metadata_path, 'r', encoding='utf-8') as f:
+            metadata = json.load(f)
+        return {"result": metadata}
+    except Exception as e:
+        logger.error(f"메타데이터 파일 읽기 오류: {str(e)}")
+        return {"error": f"메타데이터 파일 읽기 오류: {str(e)}"}
 
-def download_json_func(params):
-    """스타일북 JSON 파일을 다운로드합니다."""
-    global stylebook_data
+def get_categories():
+    """스타일북 카테고리 목록을 반환합니다."""
+    logger.debug("카테고리 목록 조회 함수 호출")
+    categories = []
     
-    rule_id = params.get("rule_id")
+    try:
+        for item in os.listdir(DATA_PATH):
+            if os.path.isdir(os.path.join(DATA_PATH, item)) and not item.startswith('.'):
+                categories.append(item)
+        return {"result": categories}
+    except Exception as e:
+        logger.error(f"카테고리 목록 조회 오류: {str(e)}")
+        return {"error": f"카테고리 목록 조회 오류: {str(e)}"}
+
+def get_rule(rule_id):
+    """규칙 ID에 해당하는 스타일북 규칙을 반환합니다."""
+    logger.debug(f"규칙 조회 함수 호출: {rule_id}")
     
-    # rule_id가 없으면 전체 데이터 반환
     if not rule_id:
-        return {
-            "success": True,
-            "data": stylebook_data,
-            "message": "전체 스타일북 데이터"
-        }
+        return {"error": "규칙 ID가 필요합니다."}
     
-    # 특정 rule_id에 해당하는 파일 찾기
-    for path, content in stylebook_data.items():
-        if path == "metadata":
-            continue
+    # 전체 파일 목록 얻기
+    found_rules = find_file_by_id(rule_id)
+    
+    if not found_rules:
+        return {"error": f"규칙을 찾을 수 없습니다: {rule_id}"}
+    
+    rule_path = found_rules[0]  # 첫 번째 일치하는 파일 사용
+    
+    try:
+        with open(rule_path, 'r', encoding='utf-8') as f:
+            rule_data = json.load(f)
+        return {"result": rule_data}
+    except Exception as e:
+        logger.error(f"규칙 파일 읽기 오류: {str(e)}")
+        return {"error": f"규칙 파일 읽기 오류: {str(e)}"}
+
+def search(query):
+    """키워드로 스타일북을 검색합니다."""
+    logger.debug(f"검색 함수 호출: {query}")
+    
+    if not query:
+        return {"error": "검색어가 필요합니다."}
+    
+    results = []
+    
+    try:
+        # 모든 JSON 파일을 검색
+        for dirpath, dirnames, filenames in os.walk(DATA_PATH):
+            # 숨김 디렉토리 제외
+            dirnames[:] = [d for d in dirnames if not d.startswith('.')]
             
-        if content.get("rule_id") == rule_id:
-            return {
-                "success": True,
-                "data": content,
-                "path": path,
-                "message": f"규칙 데이터: {rule_id}"
-            }
+            for filename in [f for f in filenames if f.endswith('.json') and not f == 'metadata.json']:
+                file_path = os.path.join(dirpath, filename)
+                
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                    
+                    # 모든 문자열 값에서 검색어 찾기
+                    found = False
+                    content_match = ""
+                    
+                    # 파일 내용을 평면화하여 검색
+                    content_str = json.dumps(data, ensure_ascii=False)
+                    if query.lower() in content_str.lower():
+                        found = True
+                        
+                        # 매칭된 부분의 컨텍스트 추출
+                        idx = content_str.lower().find(query.lower())
+                        start = max(0, idx - 50)
+                        end = min(len(content_str), idx + len(query) + 50)
+                        content_match = f"...{content_str[start:end]}..."
+                    
+                    if found:
+                        # 파일명에서 ID 추출
+                        rule_id = os.path.splitext(filename)[0]
+                        
+                        # 상대 경로 계산
+                        rel_path = os.path.relpath(file_path, DATA_PATH)
+                        
+                        results.append({
+                            "rule_id": rule_id,
+                            "path": rel_path,
+                            "title": data.get("title", "제목 없음"),
+                            "match": content_match
+                        })
+                except Exception as e:
+                    logger.warning(f"파일 검색 중 오류: {file_path} - {str(e)}")
+                    continue
+        
+        return {"result": results}
+    except Exception as e:
+        logger.error(f"검색 오류: {str(e)}")
+        return {"error": f"검색 오류: {str(e)}"}
+
+async def claude_search(query, desktop_port=5000):
+    """Claude AI를 사용하여 스타일북을 검색합니다."""
+    logger.debug(f"Claude 검색 함수 호출: {query}, 포트: {desktop_port}")
     
-    return {"success": False, "message": f"규칙을 찾을 수 없습니다: {rule_id}"}
+    if not query:
+        return {"error": "검색어가 필요합니다."}
+    
+    # Claude Desktop API에 연결
+    claude_endpoint = f"http://localhost:{desktop_port}/api/chat"
+    
+    # 스타일북 데이터 전체를 컨텍스트로 준비
+    context = ""
+    
+    try:
+        # 스타일북 데이터 수집
+        for dirpath, dirnames, filenames in os.walk(DATA_PATH):
+            # 숨김 디렉토리 제외
+            dirnames[:] = [d for d in dirnames if not d.startswith('.')]
+            
+            for filename in [f for f in filenames if f.endswith('.json') and not f == 'metadata.json']:
+                file_path = os.path.join(dirpath, filename)
+                
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                    
+                    # 제목과 규칙 추가
+                    title = data.get("title", "제목 없음")
+                    rule_id = os.path.splitext(filename)[0]
+                    category = os.path.basename(os.path.dirname(file_path))
+                    
+                    context += f"[{rule_id}] {category} - {title}\n"
+                    if "rule" in data:
+                        context += f"{data['rule']}\n\n"
+                    
+                except Exception as e:
+                    logger.warning(f"파일 읽기 중 오류: {file_path} - {str(e)}")
+                    continue
+        
+        # Claude에 보낼 메시지 준비
+        message = {
+            "model": "claude-3-opus-20240229",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": f"다음은 서울경제신문 스타일북 데이터입니다. 이 데이터를 바탕으로 다음 질문에 답변해주세요:\n\n{context}\n\n질문: {query}"
+                }
+            ],
+            "max_tokens": 1000
+        }
+        
+        # Claude Desktop API 호출 준비
+        headers = {
+            "Content-Type": "application/json"
+        }
+        
+        # 비동기 HTTP 클라이언트 초기화
+        async with aiohttp.ClientSession() as session:
+            try:
+                # Claude Desktop API 호출
+                async with session.post(claude_endpoint, json=message, headers=headers) as response:
+                    if response.status == 200:
+                        result = await response.json()
+                        return {"result": result}
+                    else:
+                        error_text = await response.text()
+                        logger.error(f"Claude API 오류: {response.status} - {error_text}")
+                        return {"error": f"Claude API 오류: {response.status}"}
+            except Exception as e:
+                logger.error(f"Claude API 통신 오류: {str(e)}")
+                return {"error": f"Claude API 통신 오류: {str(e)}"}
+    except Exception as e:
+        logger.error(f"Claude 검색 오류: {str(e)}")
+        return {"error": f"Claude 검색 오류: {str(e)}"}
+
+def download_json(rule_id=None):
+    """스타일북 JSON 파일을 다운로드합니다."""
+    logger.debug(f"JSON 다운로드 함수 호출: {rule_id if rule_id else '전체'}")
+    
+    if rule_id:
+        # 특정 규칙 파일만 다운로드
+        found_rules = find_file_by_id(rule_id)
+        
+        if not found_rules:
+            return {"error": f"규칙을 찾을 수 없습니다: {rule_id}"}
+        
+        rule_path = found_rules[0]  # 첫 번째 일치하는 파일 사용
+        
+        try:
+            with open(rule_path, 'r', encoding='utf-8') as f:
+                rule_data = json.load(f)
+            return {"result": rule_data, "filename": f"{rule_id}.json"}
+        except Exception as e:
+            logger.error(f"규칙 파일 읽기 오류: {str(e)}")
+            return {"error": f"규칙 파일 읽기 오류: {str(e)}"}
+    else:
+        # 전체 데이터 모음
+        all_data = {}
+        
+        try:
+            # 모든 JSON 파일 수집
+            for dirpath, dirnames, filenames in os.walk(DATA_PATH):
+                # 숨김 디렉토리 제외
+                dirnames[:] = [d for d in dirnames if not d.startswith('.')]
+                
+                for filename in [f for f in filenames if f.endswith('.json')]:
+                    file_path = os.path.join(dirpath, filename)
+                    
+                    try:
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            data = json.load(f)
+                        
+                        # 상대 경로 계산
+                        rel_path = os.path.relpath(file_path, DATA_PATH)
+                        all_data[rel_path] = data
+                        
+                    except Exception as e:
+                        logger.warning(f"파일 읽기 중 오류: {file_path} - {str(e)}")
+                        continue
+            
+            return {"result": all_data, "filename": "stylebook_all.json"}
+        except Exception as e:
+            logger.error(f"전체 데이터 수집 오류: {str(e)}")
+            return {"error": f"전체 데이터 수집 오류: {str(e)}"}
+
+# 도우미 함수
+def find_file_by_id(rule_id):
+    """ID로 규칙 파일을 찾습니다."""
+    found_files = []
+    
+    for dirpath, dirnames, filenames in os.walk(DATA_PATH):
+        # 숨김 디렉토리 제외
+        dirnames[:] = [d for d in dirnames if not d.startswith('.')]
+        
+        for filename in filenames:
+            if filename.endswith('.json') and os.path.splitext(filename)[0] == rule_id:
+                found_files.append(os.path.join(dirpath, filename))
+    
+    return found_files
 
 def main():
     """메인 함수"""

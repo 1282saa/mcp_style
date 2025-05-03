@@ -1,33 +1,28 @@
 # Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
 
+displayName: 서울경제신문 스타일북 MCP
+description: 서울경제신문 스타일북을 검색하고 조회할 수 있는 MCP 서버
+icon: 📚
+author: 서울경제신문
 startCommand:
   type: http
-  port: 5012
-  commandFunction: main
-  schema:
+  configSchema:
+    type: object
     properties:
-      action:
-        type: "string"
-        enum:
-          [
-            "get_metadata",
-            "get_categories",
-            "get_rule",
-            "search",
-            "claude_search",
-            "download_json",
-          ]
-        description: "실행할 도구 이름"
-      rule_id:
-        type: "string"
-        description: "규칙 ID (get_rule, download_json 도구용)"
-      query:
-        type: "string"
-        description: "검색어 (search, claude_search 도구용)"
-      desktop_port:
-        type: "number"
-        description: "Claude 데스크톱 앱의 통신 포트 (기본값: 5000)"
-    required: ["action"]
-  examples:
-    - action: "search"
-      query: "외래어 표기법"
+      port:
+        type: number
+        default: 5012
+        description: 서버 포트 번호
+      data_path:
+        type: string
+        default: "./data"
+        description: 스타일북 데이터 경로
+    required: []
+  commandFunction: |
+    ({ config }) => {
+      return {
+        command: "python",
+        args: ["stylebook_mcp_server.py", "--port", String(config.port || 5012), "--data_path", config.data_path || "./data"],
+        env: {}
+      }
+    }
