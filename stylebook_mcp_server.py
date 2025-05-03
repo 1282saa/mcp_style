@@ -720,55 +720,55 @@ def download_json_endpoint():
 def handle_stdio_mode():
     """
     표준 입출력 모드로 MCP를 실행합니다.
-    
-    이 함수는 표준 입력에서 JSON 요청을 읽고 표준 출력으로 응답을 전송합니다.
-    스미더리와 같은 도구와의 통합을 위해 사용됩니다.
     """
-    logger.info("표준 입출력 모드로 실행 중입니다.")
-    print("표준 입출력 모드 시작", file=sys.stderr)
+    print("MCP 서버 시작: 표준 입출력 모드", file=sys.stderr)
     
-    # 도구 및 기능 목록
-    tools = {
-        "get_metadata": lambda params: get_metadata(),
-        "get_categories": lambda params: get_categories(),
-        "get_rule": lambda params: get_rule(params.get("rule_id")),
-        "search": lambda params: search(params.get("query")),
-        "claude_search": lambda params: claude_search(params.get("query"), params.get("desktop_port", 5000)),
-        "download_json": lambda params: download_json(params.get("rule_id"))
-    }
+    # 도구 정의
+    tools = [
+        {
+            "name": "get_metadata",
+            "description": "스타일북 메타데이터를 반환합니다."
+        },
+        {
+            "name": "get_categories",
+            "description": "스타일북 카테고리 목록을 반환합니다."
+        },
+        {
+            "name": "get_rule",
+            "description": "스타일북 규칙을 반환합니다."
+        },
+        {
+            "name": "search",
+            "description": "키워드로 스타일북을 검색합니다."
+        },
+        {
+            "name": "claude_search",
+            "description": "Claude AI를 사용하여 스타일북을 검색합니다."
+        },
+        {
+            "name": "download_json",
+            "description": "스타일북 JSON 파일을 다운로드합니다."
+        }
+    ]
     
-    while True:
+    # 메인 루프
+    for line in sys.stdin:
         try:
-            # 표준 입력에서 JSON 읽기
-            print("표준 입력에서 메시지 대기 중...", file=sys.stderr)
-            line = sys.stdin.readline()
-            if not line:
-                print("입력이 종료되었습니다.", file=sys.stderr)
-                break
-                
+            print(f"입력 받음: {line.strip()}", file=sys.stderr)
             request = json.loads(line)
-            print(f"요청 받음: {request}", file=sys.stderr)
             
             # 초기화 요청 처리
-            if request.get("jsonrpc") == "2.0" and request.get("method") == "initialize":
-                # MCP 프로토콜 초기화 요청
-                protocol_version = request.get("params", {}).get("protocolVersion", "")
-                print(f"MCP 초기화 요청 받음, 프로토콜 버전: {protocol_version}", file=sys.stderr)
-                
-                # 초기화 응답
+            if request.get("method") == "initialize":
+                print(f"초기화 요청 받음: {request}", file=sys.stderr)
                 response = {
                     "jsonrpc": "2.0",
                     "id": request.get("id"),
                     "result": {
+                        "protocolVersion": "2024-11-05",
                         "capabilities": {
-                            "tools": [
-                                {"name": "get_metadata", "description": "스타일북 메타데이터를 반환합니다."},
-                                {"name": "get_categories", "description": "스타일북 카테고리 목록을 반환합니다."},
-                                {"name": "get_rule", "description": "스타일북 규칙을 반환합니다."},
-                                {"name": "search", "description": "키워드로 스타일북을 검색합니다."},
-                                {"name": "claude_search", "description": "Claude AI를 사용하여 스타일북을 검색합니다."},
-                                {"name": "download_json", "description": "스타일북 JSON 파일을 다운로드합니다."}
-                            ]
+                            "tools": {
+                                "listChanged": True
+                            }
                         },
                         "serverInfo": {
                             "name": "서울경제신문 스타일북 MCP",
@@ -776,336 +776,124 @@ def handle_stdio_mode():
                         }
                     }
                 }
-                
                 print(f"초기화 응답 전송: {json.dumps(response)}", file=sys.stderr)
-                sys.stdout.write(json.dumps(response) + "\n")
+                print(json.dumps(response))
                 sys.stdout.flush()
                 continue
             
-            # 표준 MCP 요청 처리
-            if "tool" in request:
-                print(f"도구 요청 처리 중: {request.get('tool')}", file=sys.stderr)
-                response = process_request(request, tools)
-                print(f"응답 전송: {json.dumps(response)}", file=sys.stderr)
-                sys.stdout.write(json.dumps(response) + "\n")
-                sys.stdout.flush()
+            # 초기화 완료 알림 처리
+            if request.get("method") == "notifications/initialized":
+                print("초기화 완료 알림 받음", file=sys.stderr)
                 continue
             
-            # 기타 MCP 메시지 처리
-            if request.get("jsonrpc") == "2.0" and request.get("method"):
-                method = request.get("method")
-                print(f"MCP 메시지 받음: {method}", file=sys.stderr)
-                
-                # 기본 응답
+            # 도구 목록 요청 처리
+            if request.get("method") == "tools/list":
+                print("도구 목록 요청 받음", file=sys.stderr)
                 response = {
                     "jsonrpc": "2.0",
-                    "id": request.get("id", 0),
-                    "result": {}
+                    "id": request.get("id"),
+                    "result": {
+                        "tools": tools
+                    }
                 }
-                
-                print(f"MCP 응답 전송: {json.dumps(response)}", file=sys.stderr)
-                sys.stdout.write(json.dumps(response) + "\n")
+                print(json.dumps(response))
                 sys.stdout.flush()
                 continue
             
-        except json.JSONDecodeError as e:
-            print(f"JSON 디코드 오류: {str(e)}", file=sys.stderr)
-            error_response = {"error": f"유효하지 않은 JSON: {str(e)}"}
-            sys.stdout.write(json.dumps(error_response) + "\n")
-            sys.stdout.flush()
-            
-        except Exception as e:
-            import traceback
-            print(f"예외 발생: {str(e)}", file=sys.stderr)
-            print(traceback.format_exc(), file=sys.stderr)
-            error_response = {"error": f"처리 중 오류 발생: {str(e)}", "traceback": traceback.format_exc()}
-            sys.stdout.write(json.dumps(error_response) + "\n")
-            sys.stdout.flush()
-
-def process_request(request, tools):
-    """
-    요청을 처리합니다.
-    
-    Args:
-        request: 요청 객체
-        tools: 도구 함수 딕셔너리
-        
-    Returns:
-        처리 결과
-    """
-    if not isinstance(request, dict):
-        return {"error": "요청은 딕셔너리 형태여야 합니다."}
-    
-    tool_name = request.get("tool")
-    params = request.get("parameters", {})
-    
-    if not tool_name:
-        return {"error": "tool 필드가 필요합니다."}
-    
-    if tool_name not in tools:
-        available_tools = list(tools.keys())
-        return {"error": f"알 수 없는 도구: {tool_name}", "available_tools": available_tools}
-    
-    try:
-        result = tools[tool_name](params)
-        return {"result": result}
-    except Exception as e:
-        import traceback
-        return {"error": f"도구 실행 오류: {str(e)}", "traceback": traceback.format_exc()}
-
-# 도구 기능 구현
-def get_metadata():
-    """스타일북 메타데이터를 반환합니다."""
-    logger.debug("메타데이터 조회 함수 호출")
-    metadata_path = os.path.join(DATA_PATH, "metadata.json")
-    
-    if not os.path.exists(metadata_path):
-        logger.error(f"메타데이터 파일을 찾을 수 없습니다: {metadata_path}")
-        return {"error": "메타데이터 파일을 찾을 수 없습니다."}
-    
-    try:
-        with open(metadata_path, 'r', encoding='utf-8') as f:
-            metadata = json.load(f)
-        return {"result": metadata}
-    except Exception as e:
-        logger.error(f"메타데이터 파일 읽기 오류: {str(e)}")
-        return {"error": f"메타데이터 파일 읽기 오류: {str(e)}"}
-
-def get_categories():
-    """스타일북 카테고리 목록을 반환합니다."""
-    logger.debug("카테고리 목록 조회 함수 호출")
-    categories = []
-    
-    try:
-        for item in os.listdir(DATA_PATH):
-            if os.path.isdir(os.path.join(DATA_PATH, item)) and not item.startswith('.'):
-                categories.append(item)
-        return {"result": categories}
-    except Exception as e:
-        logger.error(f"카테고리 목록 조회 오류: {str(e)}")
-        return {"error": f"카테고리 목록 조회 오류: {str(e)}"}
-
-def get_rule(rule_id):
-    """규칙 ID에 해당하는 스타일북 규칙을 반환합니다."""
-    logger.debug(f"규칙 조회 함수 호출: {rule_id}")
-    
-    if not rule_id:
-        return {"error": "규칙 ID가 필요합니다."}
-    
-    # 전체 파일 목록 얻기
-    found_rules = find_file_by_id(rule_id)
-    
-    if not found_rules:
-        return {"error": f"규칙을 찾을 수 없습니다: {rule_id}"}
-    
-    rule_path = found_rules[0]  # 첫 번째 일치하는 파일 사용
-    
-    try:
-        with open(rule_path, 'r', encoding='utf-8') as f:
-            rule_data = json.load(f)
-        return {"result": rule_data}
-    except Exception as e:
-        logger.error(f"규칙 파일 읽기 오류: {str(e)}")
-        return {"error": f"규칙 파일 읽기 오류: {str(e)}"}
-
-def search(query):
-    """키워드로 스타일북을 검색합니다."""
-    logger.debug(f"검색 함수 호출: {query}")
-    
-    if not query:
-        return {"error": "검색어가 필요합니다."}
-    
-    results = []
-    
-    try:
-        # 모든 JSON 파일을 검색
-        for dirpath, dirnames, filenames in os.walk(DATA_PATH):
-            # 숨김 디렉토리 제외
-            dirnames[:] = [d for d in dirnames if not d.startswith('.')]
-            
-            for filename in [f for f in filenames if f.endswith('.json') and not f == 'metadata.json']:
-                file_path = os.path.join(dirpath, filename)
-                
-                try:
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        data = json.load(f)
-                    
-                    # 모든 문자열 값에서 검색어 찾기
-                    found = False
-                    content_match = ""
-                    
-                    # 파일 내용을 평면화하여 검색
-                    content_str = json.dumps(data, ensure_ascii=False)
-                    if query.lower() in content_str.lower():
-                        found = True
-                        
-                        # 매칭된 부분의 컨텍스트 추출
-                        idx = content_str.lower().find(query.lower())
-                        start = max(0, idx - 50)
-                        end = min(len(content_str), idx + len(query) + 50)
-                        content_match = f"...{content_str[start:end]}..."
-                    
-                    if found:
-                        # 파일명에서 ID 추출
-                        rule_id = os.path.splitext(filename)[0]
-                        
-                        # 상대 경로 계산
-                        rel_path = os.path.relpath(file_path, DATA_PATH)
-                        
-                        results.append({
-                            "rule_id": rule_id,
-                            "path": rel_path,
-                            "title": data.get("title", "제목 없음"),
-                            "match": content_match
-                        })
-                except Exception as e:
-                    logger.warning(f"파일 검색 중 오류: {file_path} - {str(e)}")
-                    continue
-        
-        return {"result": results}
-    except Exception as e:
-        logger.error(f"검색 오류: {str(e)}")
-        return {"error": f"검색 오류: {str(e)}"}
-
-async def claude_search(query, desktop_port=5000):
-    """Claude AI를 사용하여 스타일북을 검색합니다."""
-    logger.debug(f"Claude 검색 함수 호출: {query}, 포트: {desktop_port}")
-    
-    if not query:
-        return {"error": "검색어가 필요합니다."}
-    
-    # Claude Desktop API에 연결
-    claude_endpoint = f"http://localhost:{desktop_port}/api/chat"
-    
-    # 스타일북 데이터 전체를 컨텍스트로 준비
-    context = ""
-    
-    try:
-        # 스타일북 데이터 수집
-        for dirpath, dirnames, filenames in os.walk(DATA_PATH):
-            # 숨김 디렉토리 제외
-            dirnames[:] = [d for d in dirnames if not d.startswith('.')]
-            
-            for filename in [f for f in filenames if f.endswith('.json') and not f == 'metadata.json']:
-                file_path = os.path.join(dirpath, filename)
-                
-                try:
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        data = json.load(f)
-                    
-                    # 제목과 규칙 추가
-                    title = data.get("title", "제목 없음")
-                    rule_id = os.path.splitext(filename)[0]
-                    category = os.path.basename(os.path.dirname(file_path))
-                    
-                    context += f"[{rule_id}] {category} - {title}\n"
-                    if "rule" in data:
-                        context += f"{data['rule']}\n\n"
-                    
-                except Exception as e:
-                    logger.warning(f"파일 읽기 중 오류: {file_path} - {str(e)}")
-                    continue
-        
-        # Claude에 보낼 메시지 준비
-        message = {
-            "model": "claude-3-opus-20240229",
-            "messages": [
-                {
-                    "role": "user",
-                    "content": f"다음은 서울경제신문 스타일북 데이터입니다. 이 데이터를 바탕으로 다음 질문에 답변해주세요:\n\n{context}\n\n질문: {query}"
+            # 리소스 목록 요청 처리
+            if request.get("method") == "resources/list":
+                print("리소스 목록 요청 받음", file=sys.stderr)
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": request.get("id"),
+                    "error": {
+                        "code": -32601,
+                        "message": "Method not found"
+                    }
                 }
-            ],
-            "max_tokens": 1000
-        }
-        
-        # Claude Desktop API 호출 준비
-        headers = {
-            "Content-Type": "application/json"
-        }
-        
-        # 비동기 HTTP 클라이언트 초기화
-        async with aiohttp.ClientSession() as session:
-            try:
-                # Claude Desktop API 호출
-                async with session.post(claude_endpoint, json=message, headers=headers) as response:
-                    if response.status == 200:
-                        result = await response.json()
-                        return {"result": result}
-                    else:
-                        error_text = await response.text()
-                        logger.error(f"Claude API 오류: {response.status} - {error_text}")
-                        return {"error": f"Claude API 오류: {response.status}"}
-            except Exception as e:
-                logger.error(f"Claude API 통신 오류: {str(e)}")
-                return {"error": f"Claude API 통신 오류: {str(e)}"}
-    except Exception as e:
-        logger.error(f"Claude 검색 오류: {str(e)}")
-        return {"error": f"Claude 검색 오류: {str(e)}"}
-
-def download_json(rule_id=None):
-    """스타일북 JSON 파일을 다운로드합니다."""
-    logger.debug(f"JSON 다운로드 함수 호출: {rule_id if rule_id else '전체'}")
-    
-    if rule_id:
-        # 특정 규칙 파일만 다운로드
-        found_rules = find_file_by_id(rule_id)
-        
-        if not found_rules:
-            return {"error": f"규칙을 찾을 수 없습니다: {rule_id}"}
-        
-        rule_path = found_rules[0]  # 첫 번째 일치하는 파일 사용
-        
-        try:
-            with open(rule_path, 'r', encoding='utf-8') as f:
-                rule_data = json.load(f)
-            return {"result": rule_data, "filename": f"{rule_id}.json"}
-        except Exception as e:
-            logger.error(f"규칙 파일 읽기 오류: {str(e)}")
-            return {"error": f"규칙 파일 읽기 오류: {str(e)}"}
-    else:
-        # 전체 데이터 모음
-        all_data = {}
-        
-        try:
-            # 모든 JSON 파일 수집
-            for dirpath, dirnames, filenames in os.walk(DATA_PATH):
-                # 숨김 디렉토리 제외
-                dirnames[:] = [d for d in dirnames if not d.startswith('.')]
-                
-                for filename in [f for f in filenames if f.endswith('.json')]:
-                    file_path = os.path.join(dirpath, filename)
-                    
-                    try:
-                        with open(file_path, 'r', encoding='utf-8') as f:
-                            data = json.load(f)
-                        
-                        # 상대 경로 계산
-                        rel_path = os.path.relpath(file_path, DATA_PATH)
-                        all_data[rel_path] = data
-                        
-                    except Exception as e:
-                        logger.warning(f"파일 읽기 중 오류: {file_path} - {str(e)}")
-                        continue
+                print(json.dumps(response))
+                sys.stdout.flush()
+                continue
             
-            return {"result": all_data, "filename": "stylebook_all.json"}
+            # 프롬프트 목록 요청 처리
+            if request.get("method") == "prompts/list":
+                print("프롬프트 목록 요청 받음", file=sys.stderr)
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": request.get("id"),
+                    "result": {
+                        "prompts": [
+                            {
+                                "name": "stylebook",
+                                "description": "서울경제신문 스타일북을 조회합니다."
+                            }
+                        ]
+                    }
+                }
+                print(json.dumps(response))
+                sys.stdout.flush()
+                continue
+            
+            # 도구 호출 처리
+            if request.get("method") == "tools/execute":
+                print(f"도구 실행 요청 받음: {request}", file=sys.stderr)
+                
+                # 도구 이름과 매개변수 추출
+                tool_name = request.get("params", {}).get("name")
+                args = request.get("params", {}).get("arguments", {})
+                
+                # 도구 호출 결과 (임시로 빈 객체 반환)
+                result = {"message": f"{tool_name} 도구가 호출되었습니다."}
+                
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": request.get("id"),
+                    "result": result
+                }
+                print(json.dumps(response))
+                sys.stdout.flush()
+                continue
+            
+            # 알 수 없는 요청 처리
+            print(f"알 수 없는 요청: {request}", file=sys.stderr)
+            response = {
+                "jsonrpc": "2.0",
+                "id": request.get("id", 0),
+                "error": {
+                    "code": -32600,
+                    "message": "Invalid Request"
+                }
+            }
+            print(json.dumps(response))
+            sys.stdout.flush()
+            
+        except json.JSONDecodeError as e:
+            print(f"JSON 파싱 오류: {e}", file=sys.stderr)
+            error_response = {
+                "jsonrpc": "2.0",
+                "id": None,
+                "error": {
+                    "code": -32700,
+                    "message": f"Parse error: {str(e)}"
+                }
+            }
+            print(json.dumps(error_response))
+            sys.stdout.flush()
+            
         except Exception as e:
-            logger.error(f"전체 데이터 수집 오류: {str(e)}")
-            return {"error": f"전체 데이터 수집 오류: {str(e)}"}
-
-# 도우미 함수
-def find_file_by_id(rule_id):
-    """ID로 규칙 파일을 찾습니다."""
-    found_files = []
-    
-    for dirpath, dirnames, filenames in os.walk(DATA_PATH):
-        # 숨김 디렉토리 제외
-        dirnames[:] = [d for d in dirnames if not d.startswith('.')]
-        
-        for filename in filenames:
-            if filename.endswith('.json') and os.path.splitext(filename)[0] == rule_id:
-                found_files.append(os.path.join(dirpath, filename))
-    
-    return found_files
+            print(f"처리 중 오류 발생: {e}", file=sys.stderr)
+            import traceback
+            traceback.print_exc(file=sys.stderr)
+            error_response = {
+                "jsonrpc": "2.0",
+                "id": None,
+                "error": {
+                    "code": -32603,
+                    "message": f"Internal error: {str(e)}"
+                }
+            }
+            print(json.dumps(error_response))
+            sys.stdout.flush()
 
 def main():
     """메인 함수"""
@@ -1128,20 +916,17 @@ def main():
     DATA_PATH = args.data_path
     print(f"스타일북 데이터 경로: {DATA_PATH}", file=sys.stderr)
     
-    # 스타일북 데이터 로드
-    global stylebook_data
-    
     if args.stdio:
-        # 표준 입출력 모드일 경우 초기화 메시지에 먼저 응답하고 나중에 데이터 로드
-        print("표준 입출력 모드로 시작합니다. 데이터 로딩은 백그라운드에서 진행됩니다.", file=sys.stderr)
+        # 표준 입출력 모드 - 데이터 로딩 전에 초기화 응답
+        print("표준 입출력 모드로 시작합니다", file=sys.stderr)
         handle_stdio_mode()
-        # stdio 모드에서는 여기까지 오지 않음
     else:
-        # HTTP 서버 모드에서는 먼저 데이터 로드
-        print("HTTP 서버 모드로 시작합니다. 데이터를 로드합니다.", file=sys.stderr)
+        # HTTP 서버 모드 - 먼저 데이터 로드
+        print("HTTP 서버 모드로 시작합니다", file=sys.stderr)
+        global stylebook_data
         stylebook_data = load_stylebook_data(args.data_path)
         
-        # HTTP 서버 모드
+        # HTTP 서버 시작
         print(f"서울경제신문 스타일북 서버 시작 중... (http://{args.host}:{args.port}/)")
         print(f"MCP 검색 엔드포인트: http://{args.host}:{args.port}/.well-known/mcp/smithery.json")
         print(f"MCP API 엔드포인트: http://{args.host}:{args.port}/mcp")
@@ -1149,5 +934,5 @@ def main():
         app.run(host=args.host, port=args.port, debug=args.debug)
 
 if __name__ == "__main__":
-    print('스타일북 MCP 서버 시작', file=sys.stderr)
+    print("스타일북 MCP 서버 시작", file=sys.stderr)
     main()
