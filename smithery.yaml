@@ -15,14 +15,14 @@ startCommand:
         description: 서버 포트 번호
       data_path:
         type: string
-        default: "./data"
+        default: "."
         description: 스타일북 데이터 경로
     required: []
   commandFunction: |
     ({ config }) => {
       return {
         command: "python",
-        args: ["stylebook_mcp_server.py", "--stdio", "--port", String(config.port || 5012), "--data_path", config.data_path || "./data"],
+        args: ["stylebook_mcp_server.py", "--stdio", "--port", String(config.port || 5012), "--data_path", config.data_path || "."],
         env: {}
       }
     }
